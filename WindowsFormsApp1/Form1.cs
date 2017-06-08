@@ -30,7 +30,7 @@ namespace SequencerDemo
          output vars
          */
         private OutputDevice toAPCmini;
-        // private OutputDevice toFLstudio;
+        private OutputDevice toFLstudio;
         private OutputDeviceDialog outDialog = new OutputDeviceDialog();
         private ChannelMessageBuilder builder = new ChannelMessageBuilder();
 
@@ -43,7 +43,7 @@ namespace SequencerDemo
 
         private InputDevice fromFLstudio = null;
         // private InputDevice inDevice = null;
-        // private InputDevice fromAPCmini = null;
+        private InputDevice fromAPCmini = null;
 
         private SynchronizationContext context;
 
@@ -78,8 +78,15 @@ namespace SequencerDemo
                         listBox1.Items.Add((string)"PORT " + ii.ToString() + '\t' + '\t' + mdevices.name.ToString() + '\t');
                         listBox1.SelectedIndex = listBox1.Items.Count - 1;
 
+
+                        listBox3.Items.Add((string)"PORT " + ii.ToString() + '\t' + '\t' + mdevices.name.ToString() + '\t');
+                        if (mdevices.name.ToString() == "APC MINI")
+                        {
+                            listBox3.SelectedIndex = listBox3.Items.Count - 1;
+                        }
+
                     }
-                    /*
+
                     int bar = OutputDevice.DeviceCount;
                     i = 0;
                     for (i = 0; i < bar; i++)
@@ -89,8 +96,13 @@ namespace SequencerDemo
                         listBox2.Items.Add((string)"PORT " + ii.ToString() + '\t' + '\t' + odevices.name.ToString() + '\t');
                         listBox2.SelectedIndex = listBox2.Items.Count - 1;
 
+                        listBox4.Items.Add((string)"PORT " + ii.ToString() + '\t' + '\t' + odevices.name.ToString() + '\t');
+                        if (odevices.name.ToString() == "APC MINI")
+                        {
+                            listBox4.SelectedIndex = listBox4.Items.Count - 1;
+                        }
                     }
-                    */
+
                     //  outDevice = new OutputDevice((int)numericUpDown1.Value);
 
 
@@ -118,35 +130,31 @@ namespace SequencerDemo
                 fromFLstudio.StopRecording();
                 fromFLstudio.Close();
             }
-            /*
+           
             if (fromAPCmini != null)
             {
                 fromAPCmini.StopRecording();
                 fromAPCmini.Close();
             }
-            */
+           
             base.OnClosing(e);
         }
 
         protected override void OnClosed(EventArgs e)
-        {
-
+        { 
 
             if (toAPCmini != null)
             {
                 toAPCmini.Dispose();
             }
-            /*
             if (fromAPCmini != null)
             {
                 fromAPCmini.Close();
             }
-
             if (toFLstudio != null)
             {
                 toFLstudio.Dispose();
             }
-            */
             if (fromFLstudio != null)
             {
                 fromFLstudio.Close();
@@ -190,7 +198,7 @@ namespace SequencerDemo
 
         private void HandleFromAPCminiMessageReceived(object sender, ChannelMessageEventArgs e)
         {
-            /*
+            
             int a = -1;
             int b = -1;
             string commCheck = e.Message.Command.ToString();
@@ -200,7 +208,7 @@ namespace SequencerDemo
             b = (int)e.Message.Data2;
             commCheck = e.Message.Command.ToString();
             comChan = (int)e.Message.MidiChannel;
-
+            
             if (commCheck == "NoteOn" )
             {
                 int[] noteArr = new int[] { 112, 113, 114, 115, 116, 117, 118, 119, 96, 97, 98, 99, 100, 101, 102, 103, 80, 81, 82, 83, 84, 85, 86, 87, 64, 65, 66, 67, 68, 69, 70, 71, 48, 49, 50, 51, 52, 53, 54, 55, 32, 33, 34, 35, 36, 37, 38, 39, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5, 6, 7, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 8, 24, 40, 56, 72, 88, 104, 120, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9 };
@@ -213,8 +221,8 @@ namespace SequencerDemo
                 builder.Build();
                 toFLstudio.Send(builder.Result);
             }
+            /*
             
-
             if (commCheck == "NoteOn")
             {
 
@@ -298,16 +306,16 @@ namespace SequencerDemo
             if (a >= 80 && a <= 88) { inrange = 1; }
             if (a >= 96 && a <= 104) { inrange = 1; }
             if (a >= 112 && a <= 120) { inrange = 1; }
-
+            /*
             if (commCheck == "NoteOn" && (comChan == 0 ) && inrange == 1)
             {
 
                 Debug.WriteLine("pad value a is " + a);
                 Debug.WriteLine("pad3 value b is " + b);
             }
-           
-            /*
-            if (commCheck == "NoteOn" && comChan == 0  && inrange == 1)
+           */
+
+            if (commCheck == "NoteOn" && comChan == 0 && inrange == 1)
             {
 
 
@@ -322,13 +330,20 @@ namespace SequencerDemo
                 //Debug.WriteLine("pad3 value b is " + b);
 
 
-                int[] colorArr = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-                int newcolor = colorArr[b];
+                // int[] colorArr = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+                int[] onoffArr = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+                int[] colorArr = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+                int newcolor = -1;
 
-
+                if (newnote >= 82 && newnote <= 89)
+                {
+                   newcolor = onoffArr[b];
+                } else {
+                   newcolor = colorArr[b];
+                }
 
                 //    Debug.WriteLine("pad4 value b is " + newcolor.ToString());
-
+                /*
                 context.Post(delegate (object dummy)
                 {
                     channelListBox.Items.Add(
@@ -352,8 +367,8 @@ namespace SequencerDemo
 
                     listBox2.SelectedIndex = listBox2.Items.Count - 1;
                 }, null);
-                
-                
+                */
+
                 if (outconnected == true)
                 {
                     builder.Command = ChannelCommand.NoteOn;
@@ -364,7 +379,7 @@ namespace SequencerDemo
                     toAPCmini.Send(builder.Result);
                 }
 
-           */
+            }
 
             
 
@@ -586,8 +601,9 @@ namespace SequencerDemo
         private void Button5_Click(object sender, EventArgs e)  {
 
 
-          
-            int ii = (listBox1.SelectedIndex + 1);
+
+            int ii = (listBox3.SelectedIndex + 1);
+            int i = (listBox4.SelectedIndex - 1);
             context = SynchronizationContext.Current;
 
             toAPCmini = new OutputDevice(ii);
@@ -645,16 +661,16 @@ namespace SequencerDemo
 
             context.Post(delegate (object dummy)
             {
-                listBox2.Items.Add("CONNECTION TO APC MINI Attempted");
-                listBox2.SelectedIndex = listBox2.Items.Count - 1;
+                channelListBox.Items.Add("CONNECTION TO APC MINI Attempted");
+                channelListBox.SelectedIndex = channelListBox.Items.Count - 1;
             }, null);
 
 
             
-            // context = SynchronizationContext.Current;
-            //fromAPCmini = new InputDevice(i);
-            //fromAPCmini.ChannelMessageReceived += HandleFromAPCminiMessageReceived;
-            //fromAPCmini.StartRecording();
+            
+            fromAPCmini = new InputDevice(i);
+            fromAPCmini.ChannelMessageReceived += HandleFromAPCminiMessageReceived;
+            fromAPCmini.StartRecording();
 
             button1.Enabled = true;
             button2.Enabled = true;
@@ -669,9 +685,12 @@ namespace SequencerDemo
         private void Button7_Click(object sender, EventArgs e)
         {
 
-            int ii = (listBox1.SelectedIndex );
+        //    int ii = (listBox2.SelectedIndex - 1);
             
-            // int ii = (listBox1.SelectedIndex);
+         //   int i = (listBox1.SelectedIndex);
+
+            int i = (listBox1.SelectedIndex + 1);
+            int ii = (listBox2.SelectedIndex - 1);
             // context = SynchronizationContext.Current;
 
 
@@ -691,11 +710,11 @@ namespace SequencerDemo
 
             context.Post(delegate (object dummy)
             {
-                listBox2.Items.Add(  "CONNECTED from out ") ;
-                listBox2.SelectedIndex = listBox2.Items.Count - 1;
+                channelListBox.Items.Add(  "CONNECTED from out ") ;
+                channelListBox.SelectedIndex = channelListBox.Items.Count - 1;
             }, null);
 
-            //toFLstudio = new OutputDevice(i);
+            toFLstudio = new OutputDevice(i);
 
             fromFLstudio = new InputDevice(ii);
             fromFLstudio.ChannelMessageReceived += HandleFLstudioMessageReceived;
@@ -752,6 +771,21 @@ namespace SequencerDemo
 
 
         private void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label5_Click(object sender, EventArgs e)
         {
 
         }
