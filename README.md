@@ -7,7 +7,7 @@ You can use midi-ox and loopMIDi to map notes it Kinda works up to a point.
 I went looking and did not find much.
 
 MOST of this is source code from the C# MIDI toolkit from CodeProject by Leslie Sanford.
-I forked it from Tebjan Halm  https://github.com/tebjan/Sanford.Multimedia.Midi
+I forked it from Tebjan Halm  
 
 
 I love the APC MINI but it needed some help working with FL Studio
@@ -45,10 +45,12 @@ please don't hesitate to make a fork and open a pull request.
 MIT License
 
 Credits:
-Leslie Sanford
-Tebjan Halm
-Tobias Erichsen
 
+Leslie Sanford
 http://www.codeproject.com/Articles/6228/C-MIDI-Toolkit
-https://code.google.com/p/vsticks/
+
+Tebjan Halm
+https://github.com/tebjan/Sanford.Multimedia.Midi
+
+Tobias Erichsen
 https://www.tobias-erichsen.de/software/loopmidi.html
