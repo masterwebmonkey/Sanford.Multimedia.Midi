@@ -16,7 +16,8 @@ the Idea is to predend the APC mini is a Launchpad for the grid and
 Launch Key for the slider
 
 --------------------------------------------------------------------------------------------------------
-to get started use loopMIDI to make 
+ to get started use loopMIDI to make 
+ https://www.tobias-erichsen.de/software/loopmidi.html
 
     APC control
     Lights
@@ -24,16 +25,13 @@ to get started use loopMIDI to make
 --------------------------------------------------------------------------------------------------------
 NEXT
 --------------------------------------------------------------------------------------------------------
-run setup from APCmini_for_FL_Studio.zip
+ APCmini_for_FL_Studio.zip
+ http://www.masterwebmonkey.com/APCmini_for_FL_Studio.zip
+ download and run setup
 
 --------------------------------------------------------------------------------------------------------
-OR you can
---------------------------------------------------------------------------------------------------------
-
-clone the whole thing for that you will need
-
-Visual Studio, FL Studio, loopMIDI, and an APCmini.
-
+    OR if you are feeling bold you can
+    clone the whole thing for that you will need
 --------------------------------------------------------------------------------------------------------
 
 Play with it. 
