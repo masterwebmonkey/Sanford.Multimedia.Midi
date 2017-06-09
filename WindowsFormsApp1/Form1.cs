@@ -12,49 +12,31 @@ using Sanford.Multimedia;
 
 using System.Diagnostics;
 
-namespace SequencerDemo
+namespace APCmini
 {
     public partial class Form1 : Form
     {
-        /*
-         * State vars
-         
-        private bool scrolling = false;
-        private bool playing = false;
-        private bool closing = false;
-        */
 
         private bool outconnected = false;
 
-        /*
-         output vars
-         */
         private OutputDevice toAPCmini;
         private OutputDevice toFLstudio;
+        private OutputDevice toFLstudioMixer;
+
+        private InputDevice fromFLstudio = null;
+        private InputDevice fromAPCmini = null;
+
         private OutputDeviceDialog outDialog = new OutputDeviceDialog();
         private ChannelMessageBuilder builder = new ChannelMessageBuilder();
 
-
-
-        /*
-        input vars and such 
-        */
         private const int SysExBufferSize = 128;
-
-        private InputDevice fromFLstudio = null;
-        // private InputDevice inDevice = null;
-        private InputDevice fromAPCmini = null;
-
         private SynchronizationContext context;
-
-        
-
-
 
         public Form1()
         {
             InitializeComponent();            
         }
+
         protected override void OnLoad(EventArgs e)
         {
             if (OutputDevice.DeviceCount == 0)
@@ -76,14 +58,24 @@ namespace SequencerDemo
                         MidiInCaps mdevices = InputDevice.GetDeviceCapabilities(i);
                         int ii = i + 1;
                         listBox1.Items.Add((string)"PORT " + ii.ToString() + '\t' + '\t' + mdevices.name.ToString() + '\t');
-                        listBox1.SelectedIndex = listBox1.Items.Count - 1;
-
+                        if (mdevices.name.ToString() == "APC control")
+                        {
+                            listBox1.SelectedIndex = listBox1.Items.Count - 1;
+                        }
 
                         listBox3.Items.Add((string)"PORT " + ii.ToString() + '\t' + '\t' + mdevices.name.ToString() + '\t');
                         if (mdevices.name.ToString() == "APC MINI")
                         {
                             listBox3.SelectedIndex = listBox3.Items.Count - 1;
                         }
+
+
+                        listBox5.Items.Add((string)"PORT " + ii.ToString() + '\t' + '\t' + mdevices.name.ToString() + '\t');
+                        if (mdevices.name.ToString() == "Mixer")
+                        {
+                            listBox5.SelectedIndex = listBox5.Items.Count - 1;
+                        }
+
 
                     }
 
@@ -94,18 +86,19 @@ namespace SequencerDemo
                         MidiOutCaps odevices = OutputDevice.GetDeviceCapabilities(i);
                         int ii = i + 1;
                         listBox2.Items.Add((string)"PORT " + ii.ToString() + '\t' + '\t' + odevices.name.ToString() + '\t');
-                        listBox2.SelectedIndex = listBox2.Items.Count - 1;
+
+                        if (odevices.name.ToString() == "Lights")
+                        {
+                            listBox2.SelectedIndex = listBox2.Items.Count - 1;
+                        }
 
                         listBox4.Items.Add((string)"PORT " + ii.ToString() + '\t' + '\t' + odevices.name.ToString() + '\t');
                         if (odevices.name.ToString() == "APC MINI")
                         {
                             listBox4.SelectedIndex = listBox4.Items.Count - 1;
                         }
+
                     }
-
-                    //  outDevice = new OutputDevice((int)numericUpDown1.Value);
-
-
 
                 }
                 catch (Exception ex)
@@ -120,10 +113,8 @@ namespace SequencerDemo
             base.OnLoad(e);
         }
 
-
         protected override void OnClosing(CancelEventArgs e)
         {
-
 
             if (fromFLstudio != null)
             {
@@ -150,6 +141,10 @@ namespace SequencerDemo
             if (fromAPCmini != null)
             {
                 fromAPCmini.Close();
+            }
+            if (toFLstudioMixer != null)
+            {
+                toFLstudioMixer.Dispose();
             }
             if (toFLstudio != null)
             {
@@ -185,17 +180,6 @@ namespace SequencerDemo
 
 
 
-
-
-
-
-
-
-
-
-
-
-
         private void HandleFromAPCminiMessageReceived(object sender, ChannelMessageEventArgs e)
         {
             
@@ -208,10 +192,44 @@ namespace SequencerDemo
             b = (int)e.Message.Data2;
             commCheck = e.Message.Command.ToString();
             comChan = (int)e.Message.MidiChannel;
-            
-            if (commCheck == "NoteOn" )
+
+
+
+
+
+
+            int inCntlRange = 0;
+            if (commCheck == "Controller")
             {
-                int[] noteArr = new int[] { 112, 113, 114, 115, 116, 117, 118, 119, 96, 97, 98, 99, 100, 101, 102, 103, 80, 81, 82, 83, 84, 85, 86, 87, 64, 65, 66, 67, 68, 69, 70, 71, 48, 49, 50, 51, 52, 53, 54, 55, 32, 33, 34, 35, 36, 37, 38, 39, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5, 6, 7, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 8, 24, 40, 56, 72, 88, 104, 120, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9 };
+                int aa = a - 8;
+
+                builder.Command = ChannelCommand.Controller;
+                builder.MidiChannel = comChan;
+                builder.Data1 = a;
+                builder.Data2 = b;
+                builder.Build();
+                toFLstudioMixer.Send(builder.Result);
+            }
+
+                if (commCheck == "NoteOn" )
+            {
+                // int[] noteArr = new int[] { 112, 113, 114, 115, 116, 117, 118, 119, 96, 97, 98, 99, 100, 101, 102, 103, 80, 81, 82, 83, 84, 85, 86, 87, 64, 65, 66, 67, 68, 69, 70, 71, 48, 49, 50, 51, 52, 53, 54, 55, 32, 33, 34, 35, 36, 37, 38, 39, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5, 6, 7, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 8, 24, 40, 56, 72, 88, 104, 120, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9 };
+                int[] noteArr = new int[] {
+                    112, 113, 114, 115, 116, 117, 118, 119,  96,  97,
+                     98,  99, 100, 101, 102, 103,  80,  81,  82,  83,
+                     84,  85,  86,  87,  64,  65,  66,  67,  68,  69,
+                     70,  71,  48,  49,  50,  51,  52,  53,  54,  55,
+                     32,  33,  34,  35,  36,  37,  38,  39,  16,  17,
+
+
+                     18,  19,  20,  21,  22,  23,   0,   1,   2,   3,
+                      4,   5,   6,   7, 120, 121, 122, 123,   9,   9,
+                      9,   9,   9,   9,   9,   9,   9,   9,   9,   9,
+                      9,   9,   8,   24, 40,  56,  72,  88, 104, 120,
+                      9,   9,   9,   9,   9,   9,   9,   9,   9,   9,
+                      9,   9,   9,   9,   9,   9,   9,   9,   9,   9,
+                      9,   9,   9,   9,   9,   9,   9,   9,   9,   9,
+                      9,   9,   9,   9,   9,   9,   9,   9 };
                 int newnote = noteArr[a];
 
                 builder.Command = ChannelCommand.NoteOn;
@@ -293,9 +311,9 @@ namespace SequencerDemo
             b = (int)e.Message.Data2;
             commCheck = e.Message.Command.ToString();
             comChan = (int)e.Message.MidiChannel;
-          
 
-            
+
+
 
             int inrange = 0;
             if (a >=  0 && a <=  8) { inrange = 1; }
@@ -322,9 +340,12 @@ namespace SequencerDemo
 
                 // MAIN PAD
                 int[] noteArr = new int[] { 56, 57, 58, 59, 60, 61, 62, 63, 82, 0, 0, 0, 0, 0, 0, 0, 48, 49, 50, 51, 52, 53, 54, 55, 83, 0, 0, 0, 0, 0, 0, 0, 40, 41, 42, 43, 44, 45, 46, 47, 84, 0, 0, 0, 0, 0, 0, 0, 32, 33, 34, 35, 36, 37, 38, 39, 85, 0, 0, 0, 0, 0, 0, 0, 24, 25, 26, 27, 28, 29, 30, 31, 86, 0, 0, 0, 0, 0, 0, 0, 16, 17, 18, 19, 20, 21, 22, 23, 87, 0, 0, 0, 0, 0, 0, 0, 8, 9, 10, 11, 12, 13, 14, 15, 88, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 89, 0, 0, 0, 0, 0, 0, 0 };
-
+                
+                // The reverse set
                 // int[] noteArr = new int[] { 112, 113, 114, 115, 116, 117, 118, 119, 96, 97, 98, 99, 100, 101, 102, 103, 80, 81, 82, 83, 84, 85, 86, 87, 64, 65, 66, 67, 68, 69, 70, 71, 48, 49, 50, 51, 52, 53, 54, 55, 32, 33, 34, 35, 36, 37, 38, 39, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5, 6, 7, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 8, 24, 40, 56, 72, 88, 104, 120, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9};
+
                 int newnote = noteArr[a];
+
                 //Debug.WriteLine("pad1 value a is " + a);
                 //Debug.WriteLine("pad2 value a is " + newnote.ToString());
                 //Debug.WriteLine("pad3 value b is " + b);
@@ -332,7 +353,21 @@ namespace SequencerDemo
 
                 // int[] colorArr = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
                 int[] onoffArr = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-                int[] colorArr = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+                int[] colorArr = new int[] {
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 4, 0, 0, 0, 0, 3,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 3, 1, 1, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 1, 1, 0, 0, 0, 0,
+                    0, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+                    6, 6, 6, 6, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0 };
                 int newcolor = -1;
 
                 if (newnote >= 82 && newnote <= 89)
@@ -410,6 +445,7 @@ namespace SequencerDemo
 
         private void HandleSysExMessageReceived(object sender, SysExMessageEventArgs e)
         {
+            /*
             context.Post(delegate (object dummy)
             {
                 string result = "\n\n"; ;
@@ -421,11 +457,13 @@ namespace SequencerDemo
 
                 sysExRichTextBox.Text += result;
             }, null);
+            */
         }
 
 
         private void HandleSysRealtimeMessageReceived(object sender, SysRealtimeMessageEventArgs e)
         {
+            /*
             context.Post(delegate (object dummy)
             {
                 sysRealtimeListBox.Items.Add(
@@ -433,28 +471,13 @@ namespace SequencerDemo
 
                 sysRealtimeListBox.SelectedIndex = sysRealtimeListBox.Items.Count - 1;
             }, null);
+            */
         }
 
         private void InDevice_Error(object sender, ErrorEventArgs e)
         {
             MessageBox.Show(e.Error.Message.ToString(), "Error!",    MessageBoxButtons.OK, MessageBoxIcon.Stop);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         private void Button2_Click(object sender, EventArgs e)
@@ -661,7 +684,7 @@ namespace SequencerDemo
 
             context.Post(delegate (object dummy)
             {
-                channelListBox.Items.Add("CONNECTION TO APC MINI Attempted");
+                channelListBox.Items.Add("CONNECTION APC MINI Attempted");
                 channelListBox.SelectedIndex = channelListBox.Items.Count - 1;
             }, null);
 
@@ -710,7 +733,7 @@ namespace SequencerDemo
 
             context.Post(delegate (object dummy)
             {
-                channelListBox.Items.Add(  "CONNECTED from out ") ;
+                channelListBox.Items.Add(  "CONNECTED APC mini to APC control") ;
                 channelListBox.SelectedIndex = channelListBox.Items.Count - 1;
             }, null);
 
@@ -723,8 +746,9 @@ namespace SequencerDemo
             fromFLstudio.SysExMessageReceived += HandleSysExMessageReceived;
             fromFLstudio.SysRealtimeMessageReceived += HandleSysRealtimeMessageReceived;
             fromFLstudio.Error += new EventHandler<ErrorEventArgs>(InDevice_Error);
-           
             fromFLstudio.StartRecording();
+
+
             connectFLstudio.Enabled = false;
         
 
@@ -786,6 +810,34 @@ namespace SequencerDemo
         }
 
         private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button5_Click_1(object sender, EventArgs e)
+        {
+            int i = (listBox5.SelectedIndex + 1);
+            context.Post(delegate (object dummy)
+            {
+                channelListBox.Items.Add("CONNECTED APC sliders to Mixer");
+                channelListBox.SelectedIndex = channelListBox.Items.Count - 1;
+            }, null);
+            toFLstudioMixer = new OutputDevice(i);
+            button5.Enabled = false;
+
+        }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label8_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
         {
 
         }

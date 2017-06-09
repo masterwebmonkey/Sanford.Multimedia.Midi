@@ -1,6 +1,6 @@
 using Sanford.Multimedia.Midi;
 
-namespace SequencerDemo
+namespace APCmini
 {
     partial class Form1
     {

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SequencerDemo.Properties {
+namespace APCmini.Properties {
     using System;
     
     

@@ -10,35 +10,38 @@ MOST of this is source code from the C# MIDI toolkit from CodeProject by Leslie 
 I forked it from Tebjan Halm  https://github.com/tebjan/Sanford.Multimedia.Midi
 
 
-you will need 
+I love the APC MINI but it needed some help working with FL Studio
+
+the Idea is to predend the APC mini is a Launchpad for the grid and 
+Launch Key for the slider
+
+--------------------------------------------------------------------------------------------------------
+to get started use loopMIDI to make 
+
+    APC control
+    Lights
+    Mixer
+--------------------------------------------------------------------------------------------------------
+NEXT
+--------------------------------------------------------------------------------------------------------
+run setup from APCmini_for_FL_Studio.zip
+
+--------------------------------------------------------------------------------------------------------
+OR you can
+--------------------------------------------------------------------------------------------------------
+
+clone the whole thing for that you will need
 
 Visual Studio, FL Studio, loopMIDI, and an APCmini.
 
-the Idea is to predend the APC mini is a Launchpad but there are two problems the buttons and the colors
-both need to be "remapped" to new values.
-
 --------------------------------------------------------------------------------------------------------
-Before you start make two "Virtual loopback MIDI" ports with loopMIDI I labled mine 
-"APC Control" and "Lights"
-
-run this solution (or the exe here in)
-
-Click Connect for the APC mini (lights should flash on the APC)... 
-Select the In/Out "Virtual loopback MIDI" for FL Studio
-
-in FL Studio F10 (to open midi settings)
-    - under Input choose "APC Control" and set it's controller type to "Novation Launchpad" and it's port to "1"
-    - set the perfomance mode midi port to "1"
-    - under Output choose "Lights" and set that port to "1"
-
 
 Play with it. 
 
 ---------------------------------------------------------------------------------------------------------
-My next thing is get the sliders maybe mapped to a third generic midi port so that they can be mapped.
----------------------------------------------------------------------------------------------------------
+If you have any improvement or fix to this library, 
+please don't hesitate to make a fork and open a pull request.
 
-If you have any improvement or fix to this library, please don't hesitate to make a fork and open a pull request.
 MIT License
 
 Credits:

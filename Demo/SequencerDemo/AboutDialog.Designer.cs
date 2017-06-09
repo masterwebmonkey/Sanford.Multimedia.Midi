@@ -1,4 +1,4 @@
-namespace SequencerDemo
+namespace APCmini
 {
     partial class AboutDialog
     {

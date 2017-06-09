@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using Sanford.Multimedia.Midi;
 using Sanford.Multimedia.Midi.UI;
 
-namespace SequencerDemo
+namespace APCmini
 {
     public partial class Form1 : Form
     {
