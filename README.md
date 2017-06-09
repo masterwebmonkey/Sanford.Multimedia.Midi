@@ -2,7 +2,7 @@ APC MINI FOR FL Studio Multimedia Midi
 =======================
 I have FL Studio and I wanted to use my APC mini in performace mode.
 
-You can use midi-ox and loopMIDi to map notes it Kinda works up to a point.
+You can use midi-ox and loopMIDI to map notes and it kind of works up to a point.
 
 I went looking and did not find much.
 
@@ -16,32 +16,35 @@ the Idea is to predend the APC mini is a Launchpad for the grid and
 Launch Key for the slider
 
 --------------------------------------------------------------------------------------------------------
-to get started use loopMIDI to make 
+FIRST
+--------------------------------------------------------------------------------------------------------
+
+ use loopMIDI to make three midi ports 
+ https://www.tobias-erichsen.de/software/loopmidi.html
 
     APC control
     Lights
     Mixer
+
+it s not hard you type a name in a box and click the plus sign
+
+
 --------------------------------------------------------------------------------------------------------
 NEXT
 --------------------------------------------------------------------------------------------------------
-run setup from APCmini_for_FL_Studio.zip
+ APCmini_for_FL_Studio.zip
+
+ http://www.masterwebmonkey.com/APCmini_for_FL_Studio.zip
+
+ download and run setup
 
 --------------------------------------------------------------------------------------------------------
-OR you can
+    OR if you are feeling bold you can clone the whole thing and spin up Visual Studio
 --------------------------------------------------------------------------------------------------------
 
-clone the whole thing for that you will need
-
-Visual Studio, FL Studio, loopMIDI, and an APCmini.
-
---------------------------------------------------------------------------------------------------------
-
-Play with it. 
+Play with it. Enjoy.
 
 ---------------------------------------------------------------------------------------------------------
-If you have any improvement or fix to this library, 
-please don't hesitate to make a fork and open a pull request.
-
 MIT License
 
 Credits:
