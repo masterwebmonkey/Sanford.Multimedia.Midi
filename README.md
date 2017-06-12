@@ -18,7 +18,6 @@ the Idea is to predend the APC mini is a Launchpad for the grid and
 Launch Key for the slider
 
 --------------------------------------------------------------------------------------------------------
-<<<<<<< HEAD
 BUGS 
 --------------------------------------------------------------------------------------------------------
     1. when you first try to connect it fails (work around) connect if don't see lights flash or the 
@@ -30,17 +29,12 @@ BUGS
 --------------------------------------------------------------------------------------------------------
 FIRST
 --------------------------------------------------------------------------------------------------------
-
- use loopMIDI to make three midi ports 
-=======
- to get started use loopMIDI to make 
->>>>>>> 22a13c3a17a6e59454ceef8239e47c0f72e831ea
+ to get started please use loopMIDI to make three midi ports
  https://www.tobias-erichsen.de/software/loopmidi.html
 
     APC control
     Lights
     Mixer
-<<<<<<< HEAD
 
 it s not hard you type a name in a box and click the plus sign
 
@@ -51,10 +45,8 @@ NEXT
  APCmini_for_FL_Studio.zip
 
  http://www.masterwebmonkey.com/APCmini_for_FL_Studio.zip
-
  download and run setup
 
-=======
 --------------------------------------------------------------------------------------------------------
 NEXT
 --------------------------------------------------------------------------------------------------------
@@ -63,11 +55,7 @@ NEXT
  download and run setup
 
 --------------------------------------------------------------------------------------------------------
-    OR if you are feeling bold you can
-    clone the whole thing for that you will need
->>>>>>> 22a13c3a17a6e59454ceef8239e47c0f72e831ea
---------------------------------------------------------------------------------------------------------
-    OR if you are feeling bold you can clone the whole thing and spin up Visual Studio
+ OR if you are feeling bold you can clone the whole thing and spin up Visual Studio
 --------------------------------------------------------------------------------------------------------
 
 Play with it. Enjoy.
