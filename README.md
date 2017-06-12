@@ -1,19 +1,30 @@
-APC MINI FOR FL Studio Multimedia Midi 
+APC MINI (hack) for FL Studio perfomance mode 
+
 =======================
-I have FL Studio and I wanted to use my APC mini in performace mode.
+I have FL Studio (https://www.image-line.com/flstudio/) 
+they will let you play with but not save untill you buy
+
+and I wanted to use my APC mini in performace mode.
 
 You can use midi-ox and loopMIDI to map notes and it kind of works up to a point.
-
-I went looking and did not find much.
-
-MOST of this is source code from the C# MIDI toolkit from CodeProject by Leslie Sanford.
-I forked it from Tebjan Halm  
+I went looking and did not find much.  MOST of this is source code from the C# MIDI toolkit from 
+CodeProject by Leslie Sanford.  I forked it from Tebjan Halm  
 
 
-I love the APC MINI but it needed some help working with FL Studio
+I love the look of the APC MINI and seems like there should be no problem getting it to work 
+but it needed some help working with FL Studio
 
 the Idea is to predend the APC mini is a Launchpad for the grid and 
 Launch Key for the slider
+
+--------------------------------------------------------------------------------------------------------
+BUGS 
+--------------------------------------------------------------------------------------------------------
+    1. when you first try to connect it fails (work around) connect if don't see lights flash or the 
+        test buttons don't do anything... close it and restart and it should work
+
+    2. I don't know what to send to FL Studio to change "pages" of shift performace zones.
+
 
 --------------------------------------------------------------------------------------------------------
 FIRST
@@ -48,6 +59,9 @@ Play with it. Enjoy.
 MIT License
 
 Credits:
+
+Image-Line Software makers of FL Studio
+(https://www.image-line.com/flstudio/) 
 
 Leslie Sanford
 http://www.codeproject.com/Articles/6228/C-MIDI-Toolkit
