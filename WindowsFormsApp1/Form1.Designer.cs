@@ -42,10 +42,10 @@ namespace APCmini
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.label2 = new System.Windows.Forms.Label();
             this.listBox4 = new System.Windows.Forms.ListBox();
             this.listBox3 = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -186,16 +186,6 @@ namespace APCmini
             this.panel2.Size = new System.Drawing.Size(306, 207);
             this.panel2.TabIndex = 18;
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(14, 154);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(219, 19);
-            this.label2.TabIndex = 19;
-            this.label2.Text = "Step 1 Connect to APC MINI";
-            // 
             // listBox4
             // 
             this.listBox4.FormattingEnabled = true;
@@ -221,6 +211,16 @@ namespace APCmini
             this.label1.TabIndex = 5;
             this.label1.Text = "Pick the \"APC MINI\" from both  device lists";
             this.label1.Click += new System.EventHandler(this.label1_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(14, 154);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(219, 19);
+            this.label2.TabIndex = 19;
+            this.label2.Text = "Step 1 Connect to APC MINI";
             // 
             // label3
             // 
@@ -284,7 +284,7 @@ namespace APCmini
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(25, 40);
+            this.label7.Location = new System.Drawing.Point(221, 9);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(245, 24);
             this.label7.TabIndex = 25;
@@ -293,10 +293,10 @@ namespace APCmini
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(252, 42);
+            this.label8.Font = new System.Drawing.Font("Arial", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(222, 33);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(358, 18);
+            this.label8.Size = new System.Drawing.Size(551, 27);
             this.label8.TabIndex = 26;
             this.label8.Text = "three midi ports \"Lights\" \"Mixer\" and \"APC control\"";
             this.label8.Click += new System.EventHandler(this.label8_Click);
@@ -335,15 +335,16 @@ namespace APCmini
             this.label12.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label12.Location = new System.Drawing.Point(25, 9);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(306, 24);
+            this.label12.Size = new System.Drawing.Size(190, 24);
             this.label12.TabIndex = 30;
-            this.label12.Text = "you should before you start...";
+            this.label12.Text = "Before you start...";
+            this.label12.Click += new System.EventHandler(this.label12_Click);
             // 
             // label13
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(27, 73);
+            this.label13.Location = new System.Drawing.Point(26, 115);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(670, 18);
             this.label13.TabIndex = 31;
