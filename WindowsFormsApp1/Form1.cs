@@ -53,6 +53,8 @@ namespace APCmini
 
                     int foo = InputDevice.DeviceCount;
                     int i = 0;
+                    int APCfound = 0;
+
                     for (i = 0; i < foo; i++)
                     {
                         MidiInCaps mdevices = InputDevice.GetDeviceCapabilities(i);
@@ -66,6 +68,7 @@ namespace APCmini
                         listBox3.Items.Add((string)"PORT " + ii.ToString() + '\t' + '\t' + mdevices.name.ToString() + '\t');
                         if (mdevices.name.ToString() == "APC MINI")
                         {
+                            APCfound = 1;
                             listBox3.SelectedIndex = listBox3.Items.Count - 1;
                         }
 
@@ -78,6 +81,16 @@ namespace APCmini
 
 
                     }
+
+
+                    if (APCfound == 0)
+                    {
+                        MessageBox.Show("No APC MINI device available.", "Error!",
+                            MessageBoxButtons.OK, MessageBoxIcon.Stop);
+
+                        Close();
+                    }
+
 
                     int bar = OutputDevice.DeviceCount;
                     i = 0;
@@ -624,10 +637,28 @@ namespace APCmini
         private void Button5_Click(object sender, EventArgs e)  {
 
 
-
             int ii = (listBox3.SelectedIndex + 1);
             int i = (listBox4.SelectedIndex - 1);
             context = SynchronizationContext.Current;
+
+            toAPCmini = new OutputDevice(ii);
+
+
+            fromAPCmini = new InputDevice(i);
+           // fromAPCmini.StartRecording();
+
+
+            if (toAPCmini != null)
+            {
+                toAPCmini.Dispose();
+            }
+            if (fromAPCmini != null)
+            {
+                fromAPCmini.StopRecording();
+                fromAPCmini.Close();
+            }
+
+
 
             toAPCmini = new OutputDevice(ii);
             outconnected = true;
@@ -838,6 +869,11 @@ namespace APCmini
         }
 
         private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label12_Click(object sender, EventArgs e)
         {
 
         }
