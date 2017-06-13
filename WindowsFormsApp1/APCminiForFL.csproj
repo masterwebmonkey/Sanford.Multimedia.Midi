@@ -69,7 +69,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>2327E9785A9F13482F19508F94B2746CABD11BB3</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>6F97BF183F23489026F70B5AFD2C0BF1AC2B8713</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>APCminiForFL_TemporaryKey.pfx</ManifestKeyFile>
