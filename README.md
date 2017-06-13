@@ -17,13 +17,9 @@ the Idea is to predend the APC mini is a Launchpad for the grid and
 Launch Key for the slider
 
 --------------------------------------------------------------------------------------------------------
-BUGS 
+BUGS/ TO DO 
 --------------------------------------------------------------------------------------------------------
-    1. when you first try to connect it fails (work around) connect if don't see lights flash or the 
-        test buttons don't do anything... close it and restart and it should work
-
-    2. I don't know what to send to FL Studio to change "pages" of shift performace zones.
-
+    1. I don't know what to send to FL Studio to change "pages" or shift performace zones.
 
 --------------------------------------------------------------------------------------------------------
 FIRST
@@ -35,7 +31,7 @@ FIRST
     Lights
     Mixer
 
-it s not hard you type a name in a box and click the plus sign
+(it is not too hard you type a name in a box and click the plus sign)
 
 
 --------------------------------------------------------------------------------------------------------
