@@ -16,6 +16,7 @@ but it needed some help working with FL Studio
 the Idea is to predend the APC mini is a Launchpad for the grid and 
 Launch Key for the row of nine sliders
 
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/QSCpdkFN_jU/0.jpg)](https://www.youtube.com/watch?v=QSCpdkFN_jU "Demo Clip")
 --------------------------------------------------------------------------------------------------------
 BUGS/ TO DO 
 --------------------------------------------------------------------------------------------------------
