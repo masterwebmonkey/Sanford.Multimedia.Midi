@@ -14,6 +14,7 @@ using System.Diagnostics;
 
 namespace APCmini
 {
+
     public partial class Form1 : Form
     {
 
@@ -32,9 +33,12 @@ namespace APCmini
         private const int SysExBufferSize = 128;
         private SynchronizationContext context;
 
+
+
+
         public Form1()
         {
-            InitializeComponent();            
+            InitializeComponent();
         }
 
         protected override void OnLoad(EventArgs e)
@@ -50,6 +54,9 @@ namespace APCmini
             {
                 try
                 {
+                    GlobalVariables.up1DataArray = new int[127] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+                    GlobalVariables.up2DataArray = new int[127] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+                    GlobalVariables.noteValueDataArray = new int[127] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
                     int foo = InputDevice.DeviceCount;
                     int i = 0;
@@ -134,18 +141,18 @@ namespace APCmini
                 fromFLstudio.StopRecording();
                 fromFLstudio.Close();
             }
-           
+
             if (fromAPCmini != null)
             {
                 fromAPCmini.StopRecording();
                 fromAPCmini.Close();
             }
-           
+
             base.OnClosing(e);
         }
 
         protected override void OnClosed(EventArgs e)
-        { 
+        {
 
             if (toAPCmini != null)
             {
@@ -191,42 +198,82 @@ namespace APCmini
             dlg.ShowDialog();
         }
 
-
-
         private void HandleFromAPCminiMessageReceived(object sender, ChannelMessageEventArgs e)
         {
-            
+            /*
+             * the APC is talking this funtion is listening  
+             */
+            int setDebugMode = 0;
             int a = -1;
             int b = -1;
+            string notice = "";
             string commCheck = e.Message.Command.ToString();
             int comChan = (int)e.Message.MidiChannel;
-            
+
             a = (int)e.Message.Data1;
             b = (int)e.Message.Data2;
             commCheck = e.Message.Command.ToString();
             comChan = (int)e.Message.MidiChannel;
 
-
-
-
-
-
-            int inCntlRange = 0;
+            /*
+             * this git project can listen to different 
+             * communication command types 
+             * 
+             * the three if blocks below are converting apc signals to novation launch pad 
+             * 
+             * Controller
+             * NoteOn
+             * NoteOff
+             * 
+             */
             if (commCheck == "Controller")
             {
-                int aa = a - 8;
 
-                builder.Command = ChannelCommand.Controller;
-                builder.MidiChannel = comChan;
-                builder.Data1 = a;
-                builder.Data2 = b;
-                builder.Build();
-                toFLstudioMixer.Send(builder.Result);
+                /* me trying to guess a defualt 
+                 * midi note values 48 to 56 on the Controller
+                 * are the 9 sliders 
+                 */
+                if (a >= 48 && a <= 56)
+                {
+                    int aa = a - 8;
+                    builder.Command = ChannelCommand.Controller;
+                    builder.MidiChannel = comChan;
+                    builder.Data1 = a;
+                    builder.Data2 = b;
+                    builder.Build();
+                    toFLstudioMixer.Send(builder.Result);
+                    if (setDebugMode == 3)
+                    {
+                        notice = " Controler " + comChan + ":" + a + ":" + b;
+                    }
+
+                }
             }
-
-                if (commCheck == "NoteOn" )
+            else if (commCheck == "NoteOn")
             {
-                // int[] noteArr = new int[] { 112, 113, 114, 115, 116, 117, 118, 119, 96, 97, 98, 99, 100, 101, 102, 103, 80, 81, 82, 83, 84, 85, 86, 87, 64, 65, 66, 67, 68, 69, 70, 71, 48, 49, 50, 51, 52, 53, 54, 55, 32, 33, 34, 35, 36, 37, 38, 39, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5, 6, 7, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 8, 24, 40, 56, 72, 88, 104, 120, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9 };
+                // array of values 
+                // 0-49, 50-99 100-127
+                // set outgoing comm channel
+                int[] chanArr = new int[] {
+                      1,   1,   1,   1,   1,   1,   1,   1,   1,   1,
+                      1,   1,   1,   1,   1,   1,   1,   1,   1,   1,
+                      1,   1,   1,   1,   1,   1,   1,   1,   1,   1,
+                      1,   1,   1,   1,   1,   1,   1,   1,   1,   1,
+                      1,   1,   1,   1,   1,   1,   1,   1,   1,   1,
+
+                      1,   1,   1,   1,   1,   1,   1,   1,   1,   1,
+                      1,   1,   1,   1,   2,   2,   2,   2,   2,   2,
+                      2,   2,   1,   1,   1,   1,   1,   1,   1,   1,
+                      1,   1,   1,   1,   1,   1,   1,   1,   1,   1,
+                      1,   1,   1,   1,   1,   1,   1,   1,   2,   1,
+
+                      1,   1,   1,   1,   1,   1,   1,   1,   1,   1,
+                      1,   1,   1,   1,   1,   1,   1,   1,   1,   1,
+                      1,   1,   1,   1,   1,   1,   1,   1 };
+
+                // array of values 
+                // 0-49, 50-99 100-127
+                // set out going note
                 int[] noteArr = new int[] {
                     112, 113, 114, 115, 116, 117, 118, 119,  96,  97,
                      98,  99, 100, 101, 102, 103,  80,  81,  82,  83,
@@ -234,43 +281,186 @@ namespace APCmini
                      70,  71,  48,  49,  50,  51,  52,  53,  54,  55,
                      32,  33,  34,  35,  36,  37,  38,  39,  16,  17,
 
-
                      18,  19,  20,  21,  22,  23,   0,   1,   2,   3,
-                      4,   5,   6,   7, 120, 121, 122, 123,   9,   9,
-                      9,   9,   9,   9,   9,   9,   9,   9,   9,   9,
+                      4,   5,   6,   7, 104, 105, 106, 107, 108, 109,
+                    110, 111,   9,   9,   9,   9,   9,   9,   9,   9,
                       9,   9,   8,   24, 40,  56,  72,  88, 104, 120,
                       9,   9,   9,   9,   9,   9,   9,   9,   9,   9,
+
                       9,   9,   9,   9,   9,   9,   9,   9,   9,   9,
                       9,   9,   9,   9,   9,   9,   9,   9,   9,   9,
                       9,   9,   9,   9,   9,   9,   9,   9 };
+
+                int control_or_note = chanArr[a];
                 int newnote = noteArr[a];
 
-                builder.Command = ChannelCommand.NoteOn;
-                builder.MidiChannel = comChan;
-                builder.Data1 = newnote;
-                builder.Data2 = 127;
-                builder.Build();
-                toFLstudio.Send(builder.Result);
+                if (control_or_note == 2)
+                {
+                    /*
+                    for (int i = 0; i < 119; i = i + 1)
+                    {
+
+                        builder.Command = ChannelCommand.NoteOn;
+                        builder.MidiChannel = 1;
+                        builder.Data1 = i;
+                        builder.Data2 = 0;
+                        builder.Build();
+                        toAPCmini.Send(builder.Result);
+
+                    }
+                    */
+                    if (a >= 64 && a <= 68)
+                    {
+                        for (int i = 0; i <= 119; i = i + 1)
+                        {
+
+                            int inrange = 0;
+                            if (i >= 0 && i <= 7) { inrange = 1; }
+                            if (i >= 16 && i <= 23) { inrange = 1; }
+                            if (i >= 32 && i <= 39) { inrange = 1; }
+                            if (i >= 48 && i <= 55) { inrange = 1; }
+                            if (i >= 64 && i <= 71) { inrange = 1; }
+                            if (i >= 80 && i <= 87) { inrange = 1; }
+                            if (i >= 96 && i <= 103) { inrange = 1; }
+                            if (i >= 112 && i <= 119) { inrange = 1; }
+                            if (inrange == 1)
+                            {
+                                builder.Command = ChannelCommand.NoteOn;
+                                builder.MidiChannel = 1;
+                                builder.Data1 = i;
+                                builder.Data2 = 0;
+                                builder.Build();
+                                toAPCmini.Send(builder.Result);
+                            }
+                        }
+
+                    }
+
+                    builder.Command = ChannelCommand.Controller;
+                    builder.MidiChannel = comChan;
+                    builder.Data1 = newnote;
+                    builder.Data2 = 127;
+                    builder.Build();
+                    toFLstudio.Send(builder.Result);
+
+                    builder.Command = ChannelCommand.Controller;
+                    builder.MidiChannel = comChan;
+                    builder.Data1 = newnote;
+                    builder.Data2 = 0;
+                    builder.Build();
+                    toFLstudio.Send(builder.Result);
+
+
+                    if (setDebugMode == 1)
+                    {
+                        notice = " Controler " + comChan + ":" + newnote + ":127 ";
+                    }
+                }
+                else
+                {
+                    builder.Command = ChannelCommand.NoteOn;
+                    builder.MidiChannel = comChan;
+                    builder.Data1 = newnote;
+                    builder.Data2 = 127;
+                    builder.Build();
+                    toFLstudio.Send(builder.Result);
+                    if (setDebugMode == 1)
+                    {
+                        notice = " NoteOn " + comChan + ":" + newnote + ":0 ";
+                    }
+                }
+
             }
-            /*
-            
-            if (commCheck == "NoteOn")
+            else if (commCheck == "NoteOff")
             {
+                // array of values 
+                // 0-49, 50-99 100-127
 
+                int[] chanArr = new int[] {
+                      1,   1,   1,   1,   1,   1,   1,   1,   1,   1,
+                      1,   1,   1,   1,   1,   1,   1,   1,   1,   1,
+                      1,   1,   1,   1,   1,   1,   1,   1,   1,   1,
+                      1,   1,   1,   1,   1,   1,   1,   1,   1,   1,
+                      1,   1,   1,   1,   1,   1,   1,   1,   1,   1,
 
+                      1,   1,   1,   1,   1,   1,   1,   1,   1,   1,
+                      1,   1,   1,   1,   2,   2,   2,   2,   2,   2,
+                      2,   2,   1,   1,   1,   1,   1,   1,   1,   1,
+                      1,   1,   1,   1,   1,   1,   1,   1,   1,   1,
+                      1,   1,   1,   1,   1,   1,   1,   1,   2,   1,
+
+                      1,   1,   1,   1,   1,   1,   1,   1,   1,   1,
+                      1,   1,   1,   1,   1,   1,   1,   1,   1,   1,
+                      1,   1,   1,   1,   1,   1,   1,   1 };
+
+                // array of values 
+                // 0-49, 50-99 100-127
+                int[] noteArr = new int[] {
+                    112, 113, 114, 115, 116, 117, 118, 119,  96,  97,
+                     98,  99, 100, 101, 102, 103,  80,  81,  82,  83,
+                     84,  85,  86,  87,  64,  65,  66,  67,  68,  69,
+                     70,  71,  48,  49,  50,  51,  52,  53,  54,  55,
+                     32,  33,  34,  35,  36,  37,  38,  39,  16,  17,
+
+                     18,  19,  20,  21,  22,  23,   0,   1,   2,   3,
+                      4,   5,   6,   7, 104, 105, 106, 107, 108, 109,
+                    110, 111,   9,   9,   9,   9,   9,   9,   9,   9,
+                      9,   9,   8,   24, 40,  56,  72,  88, 104, 120,
+                      9,   9,   9,   9,   9,   9,   9,   9,   9,   9,
+
+                      9,   9,   9,   9,   9,   9,   9,   9,   9,   9,
+                      9,   9,   9,   9,   9,   9,   9,   9,   9,   9,
+                      9,   9,   9,   9,   9,   9,   9,   9 };
+
+                int control_or_note = chanArr[a];
+                int newnote = noteArr[a];
+                if (control_or_note == 2)
+                {
+                    builder.Command = ChannelCommand.Controller;
+                    builder.MidiChannel = comChan;
+                    builder.Data1 = newnote;
+                    builder.Data2 = 0;
+                    builder.Build();
+                    toFLstudio.Send(builder.Result);
+                    if (setDebugMode == 1)
+                    {
+                        notice = " Controler " + comChan + ":" + newnote + ":0 ";
+                    }
+                }
+                else
+                {
+                    builder.Command = ChannelCommand.NoteOff;
+                    builder.MidiChannel = comChan;
+                    builder.Data1 = newnote;
+                    builder.Data2 = 0;
+                    builder.Build();
+                    toFLstudio.Send(builder.Result);
+                    if (setDebugMode == 1)
+                    {
+                        notice = " NoteOff " + comChan + ":" + newnote + ":0 ";
+                    }
+
+                }
+            }
+            // done thinking about what now say it 
+            if (setDebugMode == 1)
+            {
+                /*
+                * add translation result to the channel list box 
+                * APC say what you said to me
+                * 
+                */
                 context.Post(delegate (object dummy)
                 {
                     channelListBox.Items.Add(
-                        e.Message.Command.ToString() + '\t' + '\t' +
+                        "APC " + '\t' +
+                        e.Message.Command.ToString() + '\t' +
                         e.Message.MidiChannel.ToString() + '\t' +
                         e.Message.Data1.ToString() + '\t' +
-                        e.Message.Data2.ToString());
-
+                        e.Message.Data2.ToString() + '\t' + notice);
                     channelListBox.SelectedIndex = channelListBox.Items.Count - 1;
                 }, null);
-
             }
-            */
         }
 
 
@@ -314,9 +504,15 @@ namespace APCmini
         private void HandleFLstudioMessageReceived(object sender, ChannelMessageEventArgs e)
         {
 
+            /*
+             * FL Studio is talking get ready to tanslate and tell  the APC mini something
+             * 
+             */
 
+            int setDebugMode = 0;
             int a = -1;
             int b = -1;
+            string notice = "";
             string commCheck = e.Message.Command.ToString();
             int comChan = (int)e.Message.MidiChannel;
 
@@ -326,8 +522,146 @@ namespace APCmini
             comChan = (int)e.Message.MidiChannel;
 
 
+            if (GlobalVariables.goStartVariable == 1 && e.Message.MidiChannel.ToString() == "2")
+            {
+                context.Post(delegate (object dummy)
+                {
 
 
+                    int[] noteArr = new int[] {
+
+                    56, 57, 58, 59, 60, 61, 62, 63, 82, 99,
+                    99, 99, 99, 99, 99, 99, 48, 49, 50, 51,
+                    52, 53, 54, 55, 83, 99, 99, 99, 99, 99,
+                    99, 99, 40, 41, 42, 43, 44, 45, 46, 47,
+                    84, 99, 99, 99, 99, 99, 99, 99, 32, 33,
+
+                    34, 35, 36, 37, 38, 39, 85, 99, 99, 99,
+                    99, 99, 99, 99, 24, 25, 26, 27, 28, 29,
+                    30, 31, 86, 99, 99, 99, 99, 99, 99, 99,
+                    16, 17, 18, 19, 20, 21, 22, 23, 87, 99,
+                    99, 99, 99, 99, 99, 99,  8,  9, 10, 11,
+
+                    12, 13, 14, 15, 88, 65, 66, 67, 68, 69,
+                    70, 71,  0,  1,  2,  3,  4,  5,  6,  7,
+                    89, 99, 99, 99, 99, 99, 99, 99 };
+
+                    int[] seqArr = new int[] {
+                     0,  1,  2,  3,  4,  5,  6,  7,  8,
+                    16, 17, 18, 19, 20, 21, 22, 23, 24,
+                    32, 33, 34, 35, 36, 37, 38, 39, 40,
+                    48, 49, 50, 51, 52, 53, 54, 55, 56,
+                    64, 65, 66, 67, 68, 69, 70, 71, 72,
+                    80, 81, 82, 83, 84, 85, 86, 87, 88,
+                    96, 97, 98, 99,100,101,102,103,104,
+                    112,113,114,115,116,117,118,119,120
+                    };
+
+                    GlobalVariables.up1DataArray[GlobalVariables.countingVariable] = e.Message.Data1;
+                    int newnote = noteArr[seqArr[GlobalVariables.countingVariable]];
+                    GlobalVariables.countingVariable++;
+                    GlobalVariables.up1DataArray[GlobalVariables.countingVariable] = e.Message.Data2;
+                    int newnote2 = noteArr[seqArr[GlobalVariables.countingVariable]];
+                    GlobalVariables.countingVariable++;
+
+
+                    if (outconnected == true)
+                    {
+                        builder.Command = ChannelCommand.NoteOn;
+                        builder.MidiChannel = 0;
+                        builder.Data1 = newnote;
+                        builder.Data2 = 1;
+                        builder.Build();
+                        toAPCmini.Send(builder.Result);
+
+                        builder.Command = ChannelCommand.NoteOn;
+                        builder.MidiChannel = 0;
+                        builder.Data1 = newnote2;
+                        builder.Data2 = 1;
+                        builder.Build();
+                        toAPCmini.Send(builder.Result);
+                    }
+                    listBox6.Items.Add(
+                        "TWO " + '\t' +
+                        GlobalVariables.countingVariable + "\t" +
+                        e.Message.Command.ToString() + '\t' +
+                        e.Message.MidiChannel.ToString() + '\t' +
+                        e.Message.Data1.ToString() + '\t' +
+                        e.Message.Data2.ToString() + '\t'
+
+                        );
+
+                    channelListBox.SelectedIndex = channelListBox.Items.Count - 1;
+                }, null);
+            }
+
+
+
+            if ((commCheck == "Controller") && comChan == 0)
+            {
+
+                context.Post(delegate (object dummy)
+                {
+                    if (e.Message.Data2 == 49)
+                    {
+                        GlobalVariables.startStopVariable = 1;
+                    }
+                    else if (e.Message.Data2 == 52)
+                    {
+
+
+                        int j = 0;
+                        string mydata = "";
+                        GlobalVariables.startStopVariable = 2;
+                        GlobalVariables.countingVariable = 0;
+
+                        var result1 = string.Join(",", Array.ConvertAll(GlobalVariables.up1DataArray, x => x.ToString()));
+                        var result2 = string.Join(",", Array.ConvertAll(GlobalVariables.up2DataArray, x => x.ToString()));
+                        var result3 = string.Join(",", Array.ConvertAll(GlobalVariables.noteValueDataArray, x => x.ToString()));
+
+                        channelListBox.Items.Add(
+                            "up1 " + '\t' + result1
+                        );
+                        channelListBox.Items.Add(
+                            "up2 " + '\t' + result2
+                        );
+                        channelListBox.Items.Add(
+                            "value " + '\t' + result3
+                        );
+                        channelListBox.SelectedIndex = channelListBox.Items.Count - 1;
+                    }
+                }, null);
+
+            }
+
+
+            if (GlobalVariables.startStopVariable == 1)
+            {
+                context.Post(delegate (object dummy)
+                {
+                    if (e.Message.Command.ToString() == "NoteOn")
+                    {
+                        // GlobalVariables.noteDataArray[GlobalVariables.countingVariable] = e.Message.Data1;
+                        GlobalVariables.noteValueDataArray[e.Message.Data1] = e.Message.Data2;
+                        // GlobalVariables.countingVariable++;
+                    }
+                    listBox6.Items.Add(
+                        "FLS " + '\t' +
+                        GlobalVariables.countingVariable + "\t" +
+                        e.Message.Command.ToString() + '\t' +
+                        e.Message.MidiChannel.ToString() + '\t' +
+                        e.Message.Data1.ToString() + '\t' +
+                        e.Message.Data2.ToString() + '\t'
+
+                        );
+
+                    channelListBox.SelectedIndex = channelListBox.Items.Count - 1;
+                }, null);
+            }
+
+
+
+            /*
             int inrange = 0;
             if (a >=  0 && a <=  8) { inrange = 1; }
             if (a >= 16 && a <= 24) { inrange = 1; }
@@ -336,63 +670,187 @@ namespace APCmini
             if (a >= 64 && a <= 72) { inrange = 1; }
             if (a >= 80 && a <= 88) { inrange = 1; }
             if (a >= 96 && a <= 104) { inrange = 1; }
-            if (a >= 112 && a <= 120) { inrange = 1; }
-            /*
-            if (commCheck == "NoteOn" && (comChan == 0 ) && inrange == 1)
+            if (a >= 112 && a <= 127) { inrange = 1; }
+            if (a >= 104 && a <= 111) { inrange = 1; }
+            */
+
+
+            // if ((commCheck == "Controller") && comChan == 0)
+            if ((commCheck == "Controller"))
             {
-
-                Debug.WriteLine("pad value a is " + a);
-                Debug.WriteLine("pad3 value b is " + b);
-            }
-           */
-
-            if ((commCheck == "NoteOn" || commCheck == "NoteOff") && comChan == 0 && inrange == 1)
-            {
-
-
 
                 // MAIN PAD
-                int[] noteArr = new int[] { 56, 57, 58, 59, 60, 61, 62, 63, 82, 0, 0, 0, 0, 0, 0, 0, 48, 49, 50, 51, 52, 53, 54, 55, 83, 0, 0, 0, 0, 0, 0, 0, 40, 41, 42, 43, 44, 45, 46, 47, 84, 0, 0, 0, 0, 0, 0, 0, 32, 33, 34, 35, 36, 37, 38, 39, 85, 0, 0, 0, 0, 0, 0, 0, 24, 25, 26, 27, 28, 29, 30, 31, 86, 0, 0, 0, 0, 0, 0, 0, 16, 17, 18, 19, 20, 21, 22, 23, 87, 0, 0, 0, 0, 0, 0, 0, 8, 9, 10, 11, 12, 13, 14, 15, 88, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 89, 0, 0, 0, 0, 0, 0, 0 };
-                
-                // The reverse set
-                // int[] noteArr = new int[] { 112, 113, 114, 115, 116, 117, 118, 119, 96, 97, 98, 99, 100, 101, 102, 103, 80, 81, 82, 83, 84, 85, 86, 87, 64, 65, 66, 67, 68, 69, 70, 71, 48, 49, 50, 51, 52, 53, 54, 55, 32, 33, 34, 35, 36, 37, 38, 39, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5, 6, 7, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 8, 24, 40, 56, 72, 88, 104, 120, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9};
+                int[] noteArr = new int[] {
+
+                   56, 57, 58, 59, 60, 61, 62, 63, 82, 99,
+                   99, 99, 99, 99, 99, 99, 48, 49, 50, 51,
+                   52, 53, 54, 55, 83, 99, 99, 99, 99, 99,
+                   99, 99, 40, 41, 42, 43, 44, 45, 46, 47,
+                   84, 99, 99, 99, 99, 99, 99, 99, 32, 33,
+
+                   34, 35, 36, 37, 38, 39, 85, 99, 99, 99,
+                   99, 99, 99, 99, 24, 25, 26, 27, 28, 29,
+                   30, 31, 86, 99, 99, 99, 99, 99, 99, 99,
+                   16, 17, 18, 19, 20, 21, 22, 23, 87, 99,
+                   99, 99, 99, 99, 99, 99,  8,  9, 10, 11,
+
+                   12, 13, 14, 15, 64, 65, 66, 67, 68, 69,
+                   70, 71,  0,  1,  2,  3,  4,  5,  6,  7,
+                   89, 99, 99, 99, 99, 99, 99, 99 };
 
                 int newnote = noteArr[a];
 
-                //Debug.WriteLine("pad1 value a is " + a);
-                //Debug.WriteLine("pad2 value a is " + newnote.ToString());
-                //Debug.WriteLine("pad3 value b is " + b);
-                /**
-                 *  int[] colorArr = new int[] {
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 4, 0, 0, 0, 0, 3,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 3, 1, 1, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 1, 1, 0, 0, 0, 0,
-                    0, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-                    6, 6, 6, 6, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 1, 1, 1, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0 };
-                 */
+                int[] colorArr = new int[] {
+                    0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 
-                // int[] colorArr = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-                int[] onoffArr = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+
+                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                    1, 1, 1, 1, 1, 1, 1
+                };
+
+                int newcolor = -1;
+                newcolor = colorArr[b];
+                if (a >= 104 && a <= 111)
+                {
+                    GlobalVariables.goStartVariable = 1;
+                    if (outconnected == true)
+                    {
+                        if (newcolor > 0)
+                        {
+                            builder.Command = ChannelCommand.NoteOn;
+                        }
+                        else
+                        {
+                            builder.Command = ChannelCommand.NoteOff;
+                        }
+                        builder.MidiChannel = 0;
+                        builder.Data1 = newnote;
+                        builder.Data2 = newcolor;
+                        builder.Build();
+                        toAPCmini.Send(builder.Result);
+                        if (setDebugMode == 1)
+                        {
+                            if (newcolor > 0)
+                            {
+                                notice = " NoteOn " + "0:" + newnote + ":" + newcolor;
+                            }
+                            else
+                            {
+                                notice = " NoteOff " + "0:" + newnote + ":" + newcolor;
+                            }
+                        }
+                    }
+                    if (setDebugMode == 1)
+                    {
+                        context.Post(delegate (object dummy)
+                        {
+                            channelListBox.Items.Add(
+                                "FLS " + '\t' +
+                                e.Message.Command.ToString() + '\t' +
+                                e.Message.MidiChannel.ToString() + '\t' +
+                                e.Message.Data1.ToString() + '\t' +
+                                e.Message.Data2.ToString() + '\t' + notice
+
+                                );
+
+                            channelListBox.SelectedIndex = channelListBox.Items.Count - 1;
+                        }, null);
+                    }
+
+                }
+
+
+
+
+            }
+            // else if (commCheck == "NoteOn" && comChan == 0)
+            else if (commCheck == "NoteOn" && comChan == 0)
+            {
+
+                /*
+                if (GlobalVariables.startStopVariable == 2)
+                {
+                    context.Post(delegate (object dummy)
+                    {
+                        int j = 0;
+                        string outstring = "";
+                        while (j < GlobalVariables.pageDataArray.Length)
+                        {
+                            outstring = outstring + "," + GlobalVariables.pageDataArray[j].ToString();
+                        }
+                        listBox6.Items.Add(
+                            outstring
+
+                            );
+                        channelListBox.SelectedIndex = channelListBox.Items.Count - 1;
+                    }, null);
+                    GlobalVariables.startStopVariable = 0;
+
+
+                }
+                */
+
+                // MAIN PAD
+                int[] noteArr = new int[] {
+
+                   56, 57, 58, 59, 60, 61, 62, 63, 82, 99,
+                   99, 99, 99, 99, 99, 99, 48, 49, 50, 51,
+                   52, 53, 54, 55, 83, 99, 99, 99, 99, 99,
+                   99, 99, 40, 41, 42, 43, 44, 45, 46, 47,
+                   84, 99, 99, 99, 99, 99, 99, 99, 32, 33,
+
+                   34, 35, 36, 37, 38, 39, 85, 99, 99, 99,
+                   99, 99, 99, 99, 24, 25, 26, 27, 28, 29,
+                   30, 31, 86, 99, 99, 99, 99, 99, 99, 99,
+                   16, 17, 18, 19, 20, 21, 22, 23, 87, 99,
+                   99, 99, 99, 99, 99, 99,  8,  9, 10, 11,
+
+                   12, 13, 14, 15, 88, 65, 66, 67, 68, 69,
+                   70, 71,  0,  1,  2,  3,  4,  5,  6,  7,
+                   89, 99, 99, 99, 99, 99, 99, 99 };
+
+                int newnote = noteArr[a];
+
+                int[] onoffArr = new int[] {
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 5,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                    1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0};
 
                 int[] colorArr = new int[] {
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 5, 0, 0, 0, 0, 0, 0, 0,
                     0, 0, 0, 0, 4, 0, 0, 0, 0, 3,
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 3, 1, 1, 0, 0, 0, 0, 0, 0,
+                    0, 5, 1, 1, 0, 0, 0, 0, 0, 0,
                     0, 0, 0, 0, 1, 1, 0, 0, 0, 0,
+
                     0, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                     5, 5, 5, 5, 0, 0, 0, 0, 0, 0,
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                     0, 0, 0, 0, 0, 0, 1, 1, 1, 0,
+
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                     0, 0, 0, 0, 0, 0, 0, 0 };
@@ -400,52 +858,151 @@ namespace APCmini
 
                 if (newnote >= 82 && newnote <= 89)
                 {
-                   newcolor = onoffArr[b];
-                } else {
-                   newcolor = colorArr[b];
+                    newcolor = onoffArr[b];
                 }
-
-                //    Debug.WriteLine("pad4 value b is " + newcolor.ToString());
-                /*
-                context.Post(delegate (object dummy)
+                else if (newnote >= 64 && newnote <= 71)
                 {
-                    channelListBox.Items.Add(
-                        e.Message.Command.ToString() + '\t' + '\t' +
-                        e.Message.MidiChannel.ToString() + '\t' +
-                        e.Message.Data1.ToString() + '\t' +
-                        e.Message.Data2.ToString());
-
-                    channelListBox.SelectedIndex = channelListBox.Items.Count - 1;
-                }, null);
-
-
-                
-                context.Post(delegate (object dummy)
+                    newcolor = onoffArr[b];
+                }
+                else
                 {
-                    listBox2.Items.Add(
-                        e.Message.Command.ToString() + '\t' + '\t' +
-                        e.Message.MidiChannel.ToString() + '\t' +
-                        e.Message.Data1.ToString() + '\t' +
-                        e.Message.Data2.ToString());
-
-                    listBox2.SelectedIndex = listBox2.Items.Count - 1;
-                }, null);
-                */
+                    newcolor = colorArr[b];
+                }
 
                 if (outconnected == true)
                 {
                     builder.Command = ChannelCommand.NoteOn;
-                    builder.MidiChannel = 1;
+                    builder.MidiChannel = 0;
                     builder.Data1 = newnote;
                     builder.Data2 = newcolor;
                     builder.Build();
                     toAPCmini.Send(builder.Result);
+                    if (setDebugMode == 1)
+                    {
+                        notice = " NoteOn " + "0:" + newnote + ":" + newcolor;
+                    }
+                }
+                if (setDebugMode == 1)
+                {
+                    context.Post(delegate (object dummy)
+                    {
+                        channelListBox.Items.Add(
+                            "FLS " + '\t' +
+                            e.Message.Command.ToString() + '\t' +
+                            e.Message.MidiChannel.ToString() + '\t' +
+                            e.Message.Data1.ToString() + '\t' +
+                            e.Message.Data2.ToString() + '\t' + notice
+
+                            );
+
+                        channelListBox.SelectedIndex = channelListBox.Items.Count - 1;
+                    }, null);
+
+                }
+            }
+            //else if (commCheck == "NoteOff" && comChan == 0)
+            else if (commCheck == "NoteOff")
+            {
+                // MAIN PAD
+
+                int[] noteArr = new int[] {
+
+                   56, 57, 58, 59, 60, 61, 62, 63, 82, 99,
+                   99, 99, 99, 99, 99, 99, 48, 49, 50, 51,
+                   52, 53, 54, 55, 83, 99, 99, 99, 99, 99,
+                   99, 99, 40, 41, 42, 43, 44, 45, 46, 47,
+                   84, 99, 99, 99, 99, 99, 99, 99, 32, 33,
+
+                   34, 35, 36, 37, 38, 39, 85, 99, 99, 99,
+                   99, 99, 99, 99, 24, 25, 26, 27, 28, 29,
+                   30, 31, 86, 99, 99, 99, 99, 99, 99, 99,
+                   16, 17, 18, 19, 20, 21, 22, 23, 87, 99,
+                   99, 99, 99, 99, 99, 99,  8,  9, 10, 11,
+
+                   12, 13, 14, 15, 88, 65, 66, 67, 68, 69,
+                   70, 71,  0,  1,  2,  3,  4,  5,  6,  7,
+                   89, 99, 99, 99, 99, 99, 99, 99 };
+
+                int newnote = noteArr[a];
+
+                int[] onoffArr = new int[] {
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 5,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                    1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0};
+
+                int[] colorArr = new int[] {
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 4, 0, 0, 0, 0, 3,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 3, 1, 1, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 1, 1, 0, 0, 0, 0,
+
+                    0, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                    5, 5, 5, 5, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 1, 1, 1, 0,
+
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0 };
+                int newcolor = -1;
+
+                if (newnote >= 82 && newnote <= 89)
+                {
+                    newcolor = onoffArr[b];
+                }
+                else if (newnote >= 64 && newnote <= 71)
+                {
+                    newcolor = onoffArr[b];
+                }
+                else
+                {
+                    newcolor = colorArr[b];
                 }
 
+                if (outconnected == true)
+                {
+                    builder.Command = ChannelCommand.NoteOff;
+                    builder.MidiChannel = 0;
+                    builder.Data1 = newnote;
+                    builder.Data2 = newcolor;
+                    builder.Build();
+                    toAPCmini.Send(builder.Result);
+                    if (setDebugMode == 1)
+                    {
+                        notice = " NoteOff " + "0:" + newnote + ":" + newcolor;
+                    }
+                }
+                if (setDebugMode == 1)
+                {
+                    context.Post(delegate (object dummy)
+                    {
+                        channelListBox.Items.Add(
+                            "FLS " + '\t' +
+                            e.Message.Command.ToString() + '\t' +
+                            e.Message.MidiChannel.ToString() + '\t' +
+                            e.Message.Data1.ToString() + '\t' +
+                            e.Message.Data2.ToString() + '\t' + notice
+
+                            );
+
+                        channelListBox.SelectedIndex = channelListBox.Items.Count - 1;
+                    }, null);
+                }
             }
-
-            
-
         }
 
         /// <summary>
@@ -504,7 +1061,7 @@ namespace APCmini
 
         private void InDevice_Error(object sender, ErrorEventArgs e)
         {
-            MessageBox.Show(e.Error.Message.ToString(), "Error!",    MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            MessageBox.Show(e.Error.Message.ToString(), "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
         }
 
 
@@ -649,7 +1206,8 @@ namespace APCmini
             }
         }
 
-        private void Button5_Click(object sender, EventArgs e)  {
+        private void Button5_Click(object sender, EventArgs e)
+        {
 
 
             int ii = (listBox3.SelectedIndex + 1);
@@ -660,7 +1218,7 @@ namespace APCmini
 
 
             fromAPCmini = new InputDevice(i);
-           // fromAPCmini.StartRecording();
+            // fromAPCmini.StartRecording();
 
 
             if (toAPCmini != null)
@@ -735,8 +1293,8 @@ namespace APCmini
             }, null);
 
 
-            
-            
+
+
             fromAPCmini = new InputDevice(i);
             fromAPCmini.ChannelMessageReceived += HandleFromAPCminiMessageReceived;
             fromAPCmini.StartRecording();
@@ -747,16 +1305,16 @@ namespace APCmini
             button4.Enabled = true;
             button6.Enabled = true;
             connectAPCmini.Enabled = false;
-        
+
         }
 
 
         private void Button7_Click(object sender, EventArgs e)
         {
 
-        //    int ii = (listBox2.SelectedIndex - 1);
-            
-         //   int i = (listBox1.SelectedIndex);
+            //    int ii = (listBox2.SelectedIndex - 1);
+
+            //   int i = (listBox1.SelectedIndex);
 
             int i = (listBox1.SelectedIndex + 1);
             int ii = (listBox2.SelectedIndex - 1);
@@ -779,7 +1337,7 @@ namespace APCmini
 
             context.Post(delegate (object dummy)
             {
-                channelListBox.Items.Add(  "CONNECTED APC mini to APC control") ;
+                channelListBox.Items.Add("CONNECTED APC mini to APC control");
                 channelListBox.SelectedIndex = channelListBox.Items.Count - 1;
             }, null);
 
@@ -787,7 +1345,7 @@ namespace APCmini
 
             fromFLstudio = new InputDevice(ii);
             fromFLstudio.ChannelMessageReceived += HandleFLstudioMessageReceived;
-            
+
             fromFLstudio.SysCommonMessageReceived += HandleSysCommonMessageReceived;
             fromFLstudio.SysExMessageReceived += HandleSysExMessageReceived;
             fromFLstudio.SysRealtimeMessageReceived += HandleSysRealtimeMessageReceived;
@@ -796,7 +1354,7 @@ namespace APCmini
 
 
             connectFLstudio.Enabled = false;
-        
+
 
         }
 
@@ -893,4 +1451,14 @@ namespace APCmini
 
         }
     }
+    static class GlobalVariables
+    {
+        static public int goStartVariable { get; set; }
+        static public int startStopVariable { get; set; }
+        static public int countingVariable { get; set; }
+        static public int[] up1DataArray { get; set; }
+        static public int[] up2DataArray { get; set; }
+        static public int[] noteValueDataArray { get; set; }
+    }
+
 }

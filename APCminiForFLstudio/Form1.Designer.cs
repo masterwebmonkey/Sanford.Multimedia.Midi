@@ -15,7 +15,7 @@ namespace APCmini
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if(disposing && (components != null))
+            if (disposing && (components != null))
             {
                 components.Dispose();
             }
@@ -61,6 +61,7 @@ namespace APCmini
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
+            this.listBox6 = new System.Windows.Forms.ListBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -145,9 +146,9 @@ namespace APCmini
             // channelListBox
             // 
             this.channelListBox.FormattingEnabled = true;
-            this.channelListBox.Location = new System.Drawing.Point(649, 419);
+            this.channelListBox.Location = new System.Drawing.Point(341, 223);
             this.channelListBox.Name = "channelListBox";
-            this.channelListBox.Size = new System.Drawing.Size(264, 69);
+            this.channelListBox.Size = new System.Drawing.Size(1169, 615);
             this.channelListBox.TabIndex = 7;
             // 
             // connectFLstudio
@@ -369,9 +370,19 @@ namespace APCmini
             this.label15.TabIndex = 33;
             this.label15.Text = "HINT.  Set \"contoller type\" in FL Studio ";
             // 
+            // listBox6
+            // 
+            this.listBox6.FormattingEnabled = true;
+            this.listBox6.Location = new System.Drawing.Point(12, 501);
+            this.listBox6.Name = "listBox6";
+            this.listBox6.Size = new System.Drawing.Size(303, 342);
+            this.listBox6.TabIndex = 34;
+            // 
             // Form1
             // 
-            this.ClientSize = new System.Drawing.Size(944, 512);
+            this.ClientSize = new System.Drawing.Size(1522, 850);
+            this.Controls.Add(this.listBox6);
+            this.Controls.Add(this.channelListBox);
             this.Controls.Add(this.label15);
             this.Controls.Add(this.label14);
             this.Controls.Add(this.label13);
@@ -393,7 +404,6 @@ namespace APCmini
             this.Controls.Add(this.listBox2);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.connectFLstudio);
-            this.Controls.Add(this.channelListBox);
             this.Controls.Add(this.panel1);
             this.Name = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -439,6 +449,6 @@ namespace APCmini
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.ListBox listBox6;
     }
 }
-
