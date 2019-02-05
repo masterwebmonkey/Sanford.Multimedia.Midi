@@ -203,7 +203,7 @@ namespace APCmini
             /*
              * the APC is talking this funtion is listening  
              */
-            int setDebugMode = 1;
+            int setDebugMode = 0;
             int a = -1;
             int b = -1;
             string notice = "";
@@ -498,7 +498,7 @@ namespace APCmini
              * 
              */
 
-            int setDebugMode = 1;
+            int setDebugMode = 0;
             int a = -1;
             int b = -1;
             string notice = "";
@@ -1357,6 +1357,11 @@ namespace APCmini
         }
 
         private void label12_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void listBox4_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }
