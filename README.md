@@ -52,6 +52,9 @@ NEXT
 
 IN FL STUDIO 
 F10 for midi settings 
+*NOTE*
+Make sure in FL Studio under midi settings [F10] that the APCmini is disabled. 
+For my app to translate FL Studio should use the midi port in loopMidi ONLY.
 
 [![IMAGE ALT TEXT](http://masterwebmonkey.com/fl_midi.jpg)]
 
