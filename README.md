@@ -20,7 +20,8 @@ Launch Key for the row of nine sliders
 --------------------------------------------------------------------------------------------------------
     UPDATE  for performace zones.
     
-    [![info](https://raw.githubusercontent.com/masterwebmonkey/Sanford.Multimedia.Midi/master/APCmini-update.jpg)]
+[![IMAGE ALT TEXT](http://masterwebmonkey.com/APCmini-update.jpg)]
+
 
 --------------------------------------------------------------------------------------------------------
 FIRST
