@@ -18,9 +18,9 @@ Launch Key for the row of nine sliders
 
 [![IMAGE ALT TEXT](http://img.youtube.com/vi/QSCpdkFN_jU/0.jpg)](https://www.youtube.com/watch?v=QSCpdkFN_jU "Demo Clip")
 --------------------------------------------------------------------------------------------------------
-BUGS/ TO DO 
---------------------------------------------------------------------------------------------------------
-    1. I don't know what to send to FL Studio to change "pages" or shift performace zones.
+    UPDATE  for performace zones.
+    
+    [![info](https://raw.githubusercontent.com/masterwebmonkey/Sanford.Multimedia.Midi/master/APCmini-update.jpg)]
 
 --------------------------------------------------------------------------------------------------------
 FIRST
