@@ -203,7 +203,7 @@ namespace APCmini
             /*
              * the APC is talking this funtion is listening  
              */
-            int setDebugMode = 0;
+            int setDebugMode = 1;
             int a = -1;
             int b = -1;
             string notice = "";
@@ -242,7 +242,7 @@ namespace APCmini
                     builder.Data2 = b;
                     builder.Build();
                     toFLstudioMixer.Send(builder.Result);
-                    if (setDebugMode == 3)
+                    if (setDebugMode == 1)
                     {
                         notice = " Controler " + comChan + ":" + a + ":" + b;
                     }
@@ -309,31 +309,18 @@ namespace APCmini
 
                     }
                     */
-                    if (a >= 64 && a <= 68)
+                    if ( a == 68 || a == 98)
                     {
-                        int inrange = 0;
-                        for (int i = 0; i <= 119; i = i + 1)
+                        for (int i = 0; i <= 63; i = i + 1)
                         {
-                            /*
-                            inrange = 0;
-                            if (i >= 0 && i <= 7) { inrange = 1; }
-                            if (i >= 16 && i <= 23) { inrange = 1; }
-                            if (i >= 32 && i <= 39) { inrange = 1; }
-                            if (i >= 48 && i <= 55) { inrange = 1; }
-                            if (i >= 64 && i <= 71) { inrange = 1; }
-                            if (i >= 80 && i <= 87) { inrange = 1; }
-                            if (i >= 96 && i <= 103) { inrange = 1; }
-                            if (i >= 112 && i <= 119) { inrange = 1; }
-                            if (inrange == 1)
-                            {
-                                */
+                         
+                               
                                 builder.Command = ChannelCommand.NoteOn;
                                 builder.MidiChannel = 1;
                                 builder.Data1 = i;
                                 builder.Data2 = 0;
                                 builder.Build();
                                 toAPCmini.Send(builder.Result);
-                            //}
                         }
 
                     }
@@ -529,16 +516,30 @@ namespace APCmini
             {
                 //context.Post(delegate (object dummy)
                 //{
-                    if (e.Message.Data2 == 49)
+                if (e.Message.Data2 == 49)
+                {
+                    GlobalVariables.startStopVariable = 1;
+                    GlobalVariables.countingVariable = 0;
+                }
+                else if (e.Message.Data2 == 52)
+                {
+                    GlobalVariables.startStopVariable = 1;
+                    GlobalVariables.countingVariable = 0;
+                }
+
+                if (e.Message.Data1 == 0 && e.Message.Data2 == 0)
+                {
+                    for (int i = 0; i <= 119; i = i + 1)
                     {
-                        GlobalVariables.startStopVariable = 1;
-                    }
-                    else if (e.Message.Data2 == 52)
-                    {
-                        GlobalVariables.startStopVariable = 0;
-                        GlobalVariables.countingVariable = 0;
+                        builder.Command = ChannelCommand.NoteOn;
+                        builder.MidiChannel = 1;
+                        builder.Data1 = i;
+                        builder.Data2 = 0;
+                        builder.Build();
+                        toAPCmini.Send(builder.Result);
                     }
 
+                }
 
                 //channelListBox.SelectedIndex = channelListBox.Items.Count - 1;
                 //}, null);
@@ -594,15 +595,35 @@ namespace APCmini
                             80, 81, 82, 83, 84, 85, 86, 87,
                             96, 97, 98, 99,100,101,102,103,
                             112,113,114,115,116,117,118,119,
-                            99,99,99,99,99,99,99,99,99,99,99,99,99,
-                            99,99,99,99,99,99,99,99,99,99,99,99,99,
-                            99,99,99,99,99,99,99,99,99,99,99,99,99,
-                            99,99,99,99,99,99,99,99,99,99,99,99,99
+                            121,121,121,121,121,121,121,121,
+                            121,121,121,121,121,121,121,121,
+                            121,121,121,121,121,121,121,121,
+                            121,121,121,121,121,121,121,121,
+                            121,121,121,121,121,121,121,121,
+                            121,121,121,121,121,121,121,121
                             };
 
+                    int def1color = 1;
+                    int def2color = 1;
+                    if (e.Message.Data1 == 19 || e.Message.Data1 == 31)
+                    {
+                        def1color = 3;
+                    }
+                    if (e.Message.Data1 == 51)
+                    {
+                        def1color = 5;
+                    }
+                    if (e.Message.Data2 == 19 || e.Message.Data1 == 31)
+                    {
+                        def2color = 3;
+                    }
+                    if (e.Message.Data2 == 51)
+                    {
+                        def1color = 5;
+                    }
 
 
-                        if (e.Message.Data1 > 0)
+                    if (e.Message.Data1 > 0)
                         {
                             int newnote = noteArr[seqArr[GlobalVariables.countingVariable]];
                             if (outconnected == true)
@@ -610,7 +631,7 @@ namespace APCmini
                                 builder.Command = ChannelCommand.NoteOn;
                                 builder.MidiChannel = 0;
                                 builder.Data1 = newnote;
-                                builder.Data2 = 1;
+                                builder.Data2 = def1color;
                                 builder.Build();
                                 toAPCmini.Send(builder.Result);
                             }
@@ -623,7 +644,7 @@ namespace APCmini
                                 builder.Command = ChannelCommand.NoteOn;
                                 builder.MidiChannel = 0;
                                 builder.Data1 = newnote2;
-                                builder.Data2 = 1;
+                                builder.Data2 = def2color;
                                 builder.Build();
                                 toAPCmini.Send(builder.Result);
                             }
@@ -732,7 +753,7 @@ namespace APCmini
                     0, 0, 5, 0, 0, 0, 0, 0, 0, 0,
                     0, 0, 0, 0, 4, 0, 0, 0, 0, 3,
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 5, 1, 1, 0, 0, 0, 0, 0, 0,
+                    0, 3, 1, 1, 0, 0, 0, 0, 0, 0,
                     0, 0, 0, 0, 1, 1, 0, 0, 0, 0,
 
                     0, 5, 5, 5, 5, 5, 5, 5, 5, 5,
@@ -777,7 +798,7 @@ namespace APCmini
                     context.Post(delegate (object dummy)
                     {
                         channelListBox.Items.Add(
-                            "FLS " + '\t' +
+                            "FLSsss " + '\t' +
                             e.Message.Command.ToString() + '\t' +
                             e.Message.MidiChannel.ToString() + '\t' +
                             e.Message.Data1.ToString() + '\t' +
