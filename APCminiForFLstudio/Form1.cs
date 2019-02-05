@@ -311,10 +311,11 @@ namespace APCmini
                     */
                     if (a >= 64 && a <= 68)
                     {
+                        int inrange = 0;
                         for (int i = 0; i <= 119; i = i + 1)
                         {
-
-                            int inrange = 0;
+                            /*
+                            inrange = 0;
                             if (i >= 0 && i <= 7) { inrange = 1; }
                             if (i >= 16 && i <= 23) { inrange = 1; }
                             if (i >= 32 && i <= 39) { inrange = 1; }
@@ -325,13 +326,14 @@ namespace APCmini
                             if (i >= 112 && i <= 119) { inrange = 1; }
                             if (inrange == 1)
                             {
+                                */
                                 builder.Command = ChannelCommand.NoteOn;
                                 builder.MidiChannel = 1;
                                 builder.Data1 = i;
                                 builder.Data2 = 0;
                                 builder.Build();
                                 toAPCmini.Send(builder.Result);
-                            }
+                            //}
                         }
 
                     }
@@ -509,7 +511,7 @@ namespace APCmini
              * 
              */
 
-            int setDebugMode = 0;
+            int setDebugMode = 1;
             int a = -1;
             int b = -1;
             string notice = "";
@@ -522,234 +524,114 @@ namespace APCmini
             comChan = (int)e.Message.MidiChannel;
 
 
-            if (GlobalVariables.goStartVariable == 1 && e.Message.MidiChannel.ToString() == "2")
+
+            if (commCheck == "Controller" && comChan == 0)
             {
-                context.Post(delegate (object dummy)
-                {
-
-
-                    int[] noteArr = new int[] {
-
-                    56, 57, 58, 59, 60, 61, 62, 63, 82, 99,
-                    99, 99, 99, 99, 99, 99, 48, 49, 50, 51,
-                    52, 53, 54, 55, 83, 99, 99, 99, 99, 99,
-                    99, 99, 40, 41, 42, 43, 44, 45, 46, 47,
-                    84, 99, 99, 99, 99, 99, 99, 99, 32, 33,
-
-                    34, 35, 36, 37, 38, 39, 85, 99, 99, 99,
-                    99, 99, 99, 99, 24, 25, 26, 27, 28, 29,
-                    30, 31, 86, 99, 99, 99, 99, 99, 99, 99,
-                    16, 17, 18, 19, 20, 21, 22, 23, 87, 99,
-                    99, 99, 99, 99, 99, 99,  8,  9, 10, 11,
-
-                    12, 13, 14, 15, 88, 65, 66, 67, 68, 69,
-                    70, 71,  0,  1,  2,  3,  4,  5,  6,  7,
-                    89, 99, 99, 99, 99, 99, 99, 99 };
-
-                    int[] seqArr = new int[] {
-                     0,  1,  2,  3,  4,  5,  6,  7,  8,
-                    16, 17, 18, 19, 20, 21, 22, 23, 24,
-                    32, 33, 34, 35, 36, 37, 38, 39, 40,
-                    48, 49, 50, 51, 52, 53, 54, 55, 56,
-                    64, 65, 66, 67, 68, 69, 70, 71, 72,
-                    80, 81, 82, 83, 84, 85, 86, 87, 88,
-                    96, 97, 98, 99,100,101,102,103,104,
-                    112,113,114,115,116,117,118,119,120
-                    };
-
-                    GlobalVariables.up1DataArray[GlobalVariables.countingVariable] = e.Message.Data1;
-                    int newnote = noteArr[seqArr[GlobalVariables.countingVariable]];
-                    GlobalVariables.countingVariable++;
-                    GlobalVariables.up1DataArray[GlobalVariables.countingVariable] = e.Message.Data2;
-                    int newnote2 = noteArr[seqArr[GlobalVariables.countingVariable]];
-                    GlobalVariables.countingVariable++;
-
-
-                    if (outconnected == true)
-                    {
-                        builder.Command = ChannelCommand.NoteOn;
-                        builder.MidiChannel = 0;
-                        builder.Data1 = newnote;
-                        builder.Data2 = 1;
-                        builder.Build();
-                        toAPCmini.Send(builder.Result);
-
-                        builder.Command = ChannelCommand.NoteOn;
-                        builder.MidiChannel = 0;
-                        builder.Data1 = newnote2;
-                        builder.Data2 = 1;
-                        builder.Build();
-                        toAPCmini.Send(builder.Result);
-                    }
-                    listBox6.Items.Add(
-                        "TWO " + '\t' +
-                        GlobalVariables.countingVariable + "\t" +
-                        e.Message.Command.ToString() + '\t' +
-                        e.Message.MidiChannel.ToString() + '\t' +
-                        e.Message.Data1.ToString() + '\t' +
-                        e.Message.Data2.ToString() + '\t'
-
-                        );
-
-                    channelListBox.SelectedIndex = channelListBox.Items.Count - 1;
-                }, null);
-            }
-
-
-
-            if ((commCheck == "Controller") && comChan == 0)
-            {
-
-                context.Post(delegate (object dummy)
-                {
+                //context.Post(delegate (object dummy)
+                //{
                     if (e.Message.Data2 == 49)
                     {
                         GlobalVariables.startStopVariable = 1;
                     }
                     else if (e.Message.Data2 == 52)
                     {
-
-
-                        int j = 0;
-                        string mydata = "";
-                        GlobalVariables.startStopVariable = 2;
+                        GlobalVariables.startStopVariable = 0;
                         GlobalVariables.countingVariable = 0;
+                    }
 
-                        var result1 = string.Join(",", Array.ConvertAll(GlobalVariables.up1DataArray, x => x.ToString()));
-                        var result2 = string.Join(",", Array.ConvertAll(GlobalVariables.up2DataArray, x => x.ToString()));
-                        var result3 = string.Join(",", Array.ConvertAll(GlobalVariables.noteValueDataArray, x => x.ToString()));
 
+                //channelListBox.SelectedIndex = channelListBox.Items.Count - 1;
+                //}, null);
+
+                if (setDebugMode == 1)
+                {
+                    context.Post(delegate (object dummy)
+                    {
                         channelListBox.Items.Add(
-                            "up1 " + '\t' + result1
-                        );
-                        channelListBox.Items.Add(
-                            "up2 " + '\t' + result2
-                        );
-                        channelListBox.Items.Add(
-                            "value " + '\t' + result3
-                        );
+                            "FLS " + '\t' +
+                            e.Message.Command.ToString() + '\t' +
+                            e.Message.MidiChannel.ToString() + '\t' +
+                            e.Message.Data1.ToString() + '\t' +
+                            e.Message.Data2.ToString() + '\t' + notice
+
+                            );
+
                         channelListBox.SelectedIndex = channelListBox.Items.Count - 1;
-                    }
-                }, null);
+                    }, null);
+
+                }
 
             }
-
-
-            if (GlobalVariables.startStopVariable == 1)
+            else if (commCheck == "NoteOn" && comChan == 2)
             {
-                context.Post(delegate (object dummy)
-                {
-                    if (e.Message.Command.ToString() == "NoteOn")
-                    {
-                        // GlobalVariables.noteDataArray[GlobalVariables.countingVariable] = e.Message.Data1;
-                        GlobalVariables.noteValueDataArray[e.Message.Data1] = e.Message.Data2;
-                        // GlobalVariables.countingVariable++;
-                    }
-                    listBox6.Items.Add(
-                        "FLS " + '\t' +
-                        GlobalVariables.countingVariable + "\t" +
-                        e.Message.Command.ToString() + '\t' +
-                        e.Message.MidiChannel.ToString() + '\t' +
-                        e.Message.Data1.ToString() + '\t' +
-                        e.Message.Data2.ToString() + '\t'
+                //context.Post(delegate (object dummy)                {
 
-                        );
+                    if (GlobalVariables.startStopVariable == 1) { 
+                        int[] noteArr = new int[] {
 
-                    channelListBox.SelectedIndex = channelListBox.Items.Count - 1;
-                }, null);
-            }
+                            56, 57, 58, 59, 60, 61, 62, 63, 82, 99,
+                            99, 99, 99, 99, 99, 99, 48, 49, 50, 51,
+                            52, 53, 54, 55, 83, 99, 99, 99, 99, 99,
+                            99, 99, 40, 41, 42, 43, 44, 45, 46, 47,
+                            84, 99, 99, 99, 99, 99, 99, 99, 32, 33,
+
+                            34, 35, 36, 37, 38, 39, 85, 99, 99, 99,
+                            99, 99, 99, 99, 24, 25, 26, 27, 28, 29,
+                            30, 31, 86, 99, 99, 99, 99, 99, 99, 99,
+                            16, 17, 18, 19, 20, 21, 22, 23, 87, 99,
+                            99, 99, 99, 99, 99, 99,  8,  9, 10, 11,
+
+                            12, 13, 14, 15, 88, 65, 66, 67, 68, 69,
+                            70, 71,  0,  1,  2,  3,  4,  5,  6,  7,
+                            89, 99, 99, 99, 99, 99, 99, 99 };
+
+                        int[] seqArr = new int[] {
+                             0,  1,  2,  3,  4,  5,  6,  7,
+                            16, 17, 18, 19, 20, 21, 22, 23,
+                            32, 33, 34, 35, 36, 37, 38, 39,
+                            48, 49, 50, 51, 52, 53, 54, 55,
+                            64, 65, 66, 67, 68, 69, 70, 71,
+                            80, 81, 82, 83, 84, 85, 86, 87,
+                            96, 97, 98, 99,100,101,102,103,
+                            112,113,114,115,116,117,118,119,
+                            99,99,99,99,99,99,99,99,99,99,99,99,99,
+                            99,99,99,99,99,99,99,99,99,99,99,99,99,
+                            99,99,99,99,99,99,99,99,99,99,99,99,99,
+                            99,99,99,99,99,99,99,99,99,99,99,99,99
+                            };
 
 
 
-            /*
-            int inrange = 0;
-            if (a >=  0 && a <=  8) { inrange = 1; }
-            if (a >= 16 && a <= 24) { inrange = 1; }
-            if (a >= 32 && a <= 40) { inrange = 1; }
-            if (a >= 48 && a <= 56) { inrange = 1; }
-            if (a >= 64 && a <= 72) { inrange = 1; }
-            if (a >= 80 && a <= 88) { inrange = 1; }
-            if (a >= 96 && a <= 104) { inrange = 1; }
-            if (a >= 112 && a <= 127) { inrange = 1; }
-            if (a >= 104 && a <= 111) { inrange = 1; }
-            */
-
-
-            // if ((commCheck == "Controller") && comChan == 0)
-            if ((commCheck == "Controller"))
-            {
-
-                // MAIN PAD
-                int[] noteArr = new int[] {
-
-                   56, 57, 58, 59, 60, 61, 62, 63, 82, 99,
-                   99, 99, 99, 99, 99, 99, 48, 49, 50, 51,
-                   52, 53, 54, 55, 83, 99, 99, 99, 99, 99,
-                   99, 99, 40, 41, 42, 43, 44, 45, 46, 47,
-                   84, 99, 99, 99, 99, 99, 99, 99, 32, 33,
-
-                   34, 35, 36, 37, 38, 39, 85, 99, 99, 99,
-                   99, 99, 99, 99, 24, 25, 26, 27, 28, 29,
-                   30, 31, 86, 99, 99, 99, 99, 99, 99, 99,
-                   16, 17, 18, 19, 20, 21, 22, 23, 87, 99,
-                   99, 99, 99, 99, 99, 99,  8,  9, 10, 11,
-
-                   12, 13, 14, 15, 64, 65, 66, 67, 68, 69,
-                   70, 71,  0,  1,  2,  3,  4,  5,  6,  7,
-                   89, 99, 99, 99, 99, 99, 99, 99 };
-
-                int newnote = noteArr[a];
-
-                int[] colorArr = new int[] {
-                    0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-
-                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-
-                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                    1, 1, 1, 1, 1, 1, 1
-                };
-
-                int newcolor = -1;
-                newcolor = colorArr[b];
-                if (a >= 104 && a <= 111)
-                {
-                    GlobalVariables.goStartVariable = 1;
-                    if (outconnected == true)
-                    {
-                        if (newcolor > 0)
+                        if (e.Message.Data1 > 0)
                         {
-                            builder.Command = ChannelCommand.NoteOn;
-                        }
-                        else
-                        {
-                            builder.Command = ChannelCommand.NoteOff;
-                        }
-                        builder.MidiChannel = 0;
-                        builder.Data1 = newnote;
-                        builder.Data2 = newcolor;
-                        builder.Build();
-                        toAPCmini.Send(builder.Result);
-                        if (setDebugMode == 1)
-                        {
-                            if (newcolor > 0)
+                            int newnote = noteArr[seqArr[GlobalVariables.countingVariable]];
+                            if (outconnected == true)
                             {
-                                notice = " NoteOn " + "0:" + newnote + ":" + newcolor;
-                            }
-                            else
-                            {
-                                notice = " NoteOff " + "0:" + newnote + ":" + newcolor;
+                                builder.Command = ChannelCommand.NoteOn;
+                                builder.MidiChannel = 0;
+                                builder.Data1 = newnote;
+                                builder.Data2 = 1;
+                                builder.Build();
+                                toAPCmini.Send(builder.Result);
                             }
                         }
+                        GlobalVariables.countingVariable++;
+                        if (e.Message.Data2 > 0) {
+                            int newnote2 = noteArr[seqArr[GlobalVariables.countingVariable]];
+                            if (outconnected == true)
+                            {
+                                builder.Command = ChannelCommand.NoteOn;
+                                builder.MidiChannel = 0;
+                                builder.Data1 = newnote2;
+                                builder.Data2 = 1;
+                                builder.Build();
+                                toAPCmini.Send(builder.Result);
+                            }
+
+                        }
+                        GlobalVariables.countingVariable++;
                     }
+
                     if (setDebugMode == 1)
                     {
                         context.Post(delegate (object dummy)
@@ -765,15 +647,23 @@ namespace APCmini
 
                             channelListBox.SelectedIndex = channelListBox.Items.Count - 1;
                         }, null);
+
                     }
+                    /*
+                    listBox6.Items.Add(
+                        "chanTWO " + '\t' +
+                        GlobalVariables.countingVariable + "\t" +
+                        e.Message.Command.ToString() + '\t' +
+                        e.Message.MidiChannel.ToString() + '\t' +
+                        e.Message.Data1.ToString() + '\t' +
+                        e.Message.Data2.ToString() + '\t'
 
-                }
+                        );
 
-
-
-
+                    listBox6.SelectedIndex = listBox6.Items.Count - 1;
+                    */
+                //}, null);
             }
-            // else if (commCheck == "NoteOn" && comChan == 0)
             else if (commCheck == "NoteOn" && comChan == 0)
             {
 
@@ -792,7 +682,7 @@ namespace APCmini
                             outstring
 
                             );
-                        channelListBox.SelectedIndex = channelListBox.Items.Count - 1;
+                        channelListBox.SelectedIndex = listBox6.Items.Count - 1;
                     }, null);
                     GlobalVariables.startStopVariable = 0;
 
@@ -900,8 +790,7 @@ namespace APCmini
 
                 }
             }
-            //else if (commCheck == "NoteOff" && comChan == 0)
-            else if (commCheck == "NoteOff")
+            else if (commCheck == "NoteOff" && comChan == 0)
             {
                 // MAIN PAD
 
