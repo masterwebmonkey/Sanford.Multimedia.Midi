@@ -20,7 +20,7 @@ Launch Key for the row of nine sliders
 --------------------------------------------------------------------------------------------------------
     UPDATE  for performace zones.
     
-[![IMAGE ALT TEXT](http://masterwebmonkey.com/APCmini-update.jpg)]
+![IMAGE ALT TEXT](http://masterwebmonkey.com/APCmini-update.jpg)
 
 
 --------------------------------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ FIRST
 
 (it is not too hard you type a name in a box and click the plus sign)
 
-[![IMAGE ALT TEXT](http://masterwebmonkey.com/loopmidi.jpg)]
+![IMAGE ALT TEXT](http://masterwebmonkey.com/loopmidi.jpg)
 
 --------------------------------------------------------------------------------------------------------
 NEXT
@@ -45,7 +45,7 @@ NEXT
  http://www.masterwebmonkey.com/APCmini_for_FL_Studio.zip
  download and run setup
 
-[![IMAGE ALT TEXT](http://masterwebmonkey.com/myprog.gif)]
+![IMAGE ALT TEXT](http://masterwebmonkey.com/myprog.gif)
 --------------------------------------------------------------------------------------------------------
  OR if you are feeling bold you can clone the whole thing and spin up Visual Studio
 --------------------------------------------------------------------------------------------------------
@@ -57,7 +57,7 @@ F10 for midi settings
 Make sure in FL Studio under midi settings [F10] that the APCmini is disabled. 
 For my app to translate FL Studio should use the midi port in loopMidi ONLY.
 
-[![IMAGE ALT TEXT](http://masterwebmonkey.com/fl_midi.jpg)]
+![IMAGE ALT TEXT](http://masterwebmonkey.com/fl_midi.jpg)
 
 
 
