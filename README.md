@@ -39,7 +39,7 @@ UPDATE  I changed the port names for FL 20.
 It seems it automagicly connects channels for output devices now.
 
 
-![IMAGE ALT TEXT](http://masterwebmonkey.com/loopmidi.jpg)
+![IMAGE ALT TEXT](http://masterwebmonkey.com/loopmidi2.jpg)
 
 --------------------------------------------------------------------------------------------------------
 NEXT
@@ -49,7 +49,7 @@ NEXT
  http://www.masterwebmonkey.com/APCmini_for_FL_Studio.zip
  download and run setup
 
-![IMAGE ALT TEXT](http://masterwebmonkey.com/myprog.gif)
+![IMAGE ALT TEXT](http://masterwebmonkey.com/myprog2.gif)
 --------------------------------------------------------------------------------------------------------
  OR if you are feeling bold you can clone the whole thing and spin up Visual Studio
 --------------------------------------------------------------------------------------------------------
