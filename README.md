@@ -30,9 +30,11 @@ FIRST
  to get started please use loopMIDI to make three midi ports
  https://www.tobias-erichsen.de/software/loopmidi.html
 
-    APCpad
+ !PLEASE ADD them in this order! 
+
     APClights
     APCmixer
+    APCpad
 
 (it is not too hard you type a name in a box and click the plus sign)
 UPDATE  I changed the port names for FL 20. 
