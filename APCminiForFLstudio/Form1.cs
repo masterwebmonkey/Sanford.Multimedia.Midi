@@ -67,7 +67,7 @@ namespace APCmini
                         MidiInCaps mdevices = InputDevice.GetDeviceCapabilities(i);
                         int ii = i + 1;
                         listBox1.Items.Add((string)"PORT " + ii.ToString() + '\t' + '\t' + mdevices.name.ToString() + '\t');
-                        if (mdevices.name.ToString() == "APC control")
+                        if (mdevices.name.ToString() == "APCpad")
                         {
                             listBox1.SelectedIndex = listBox1.Items.Count - 1;
                         }
@@ -81,7 +81,7 @@ namespace APCmini
 
 
                         listBox5.Items.Add((string)"PORT " + ii.ToString() + '\t' + '\t' + mdevices.name.ToString() + '\t');
-                        if (mdevices.name.ToString() == "Mixer")
+                        if (mdevices.name.ToString() == "APCmixer")
                         {
                             listBox5.SelectedIndex = listBox5.Items.Count - 1;
                         }
@@ -107,7 +107,7 @@ namespace APCmini
                         int ii = i + 1;
                         listBox2.Items.Add((string)"PORT " + ii.ToString() + '\t' + '\t' + odevices.name.ToString() + '\t');
 
-                        if (odevices.name.ToString() == "Lights")
+                        if (odevices.name.ToString() == "APClights")
                         {
                             listBox2.SelectedIndex = listBox2.Items.Count - 1;
                         }
