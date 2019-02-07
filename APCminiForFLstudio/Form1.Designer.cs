@@ -46,15 +46,12 @@ namespace APCmini
             this.listBox3 = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.listBox5 = new System.Windows.Forms.ListBox();
             this.label6 = new System.Windows.Forms.Label();
             this.button5 = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
@@ -223,25 +220,6 @@ namespace APCmini
             this.label2.TabIndex = 19;
             this.label2.Text = "Step 1 Connect to APC MINI";
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(356, 342);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(187, 13);
-            this.label3.TabIndex = 19;
-            this.label3.Text = "Pick a Device to act as \"APC control\"";
-            this.label3.Click += new System.EventHandler(this.label3_Click);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(353, 233);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(216, 13);
-            this.label4.TabIndex = 20;
-            this.label4.Text = "Pick a device for perfomance mode \"Lights\"";
-            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -266,9 +244,9 @@ namespace APCmini
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(649, 349);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(239, 13);
+            this.label6.Size = new System.Drawing.Size(259, 13);
             this.label6.TabIndex = 23;
-            this.label6.Text = "for \"Mixer\" to \"Novation Launchkey (Key Board)\"";
+            this.label6.Text = "for \"APCmixer\" to \"Novation Launchkey (Key Board)\"";
             this.label6.Click += new System.EventHandler(this.label6_Click);
             // 
             // button5
@@ -302,23 +280,15 @@ namespace APCmini
             this.label8.Text = "three midi ports \"APClights\" \"APCmixer\" and \"APCpad\"";
             this.label8.Click += new System.EventHandler(this.label8_Click);
             // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(648, 235);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(125, 13);
-            this.label9.TabIndex = 27;
-            this.label9.Text = "Pick a device for \"Mixer\"";
-            // 
             // label10
             // 
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(356, 446);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(213, 13);
+            this.label10.Size = new System.Drawing.Size(196, 13);
             this.label10.TabIndex = 28;
-            this.label10.Text = "for \"APC control\" to \"Novation Launchpad\"";
+            this.label10.Text = "for \"APCpad\" to \"Novation Launchpad\"";
+            this.label10.Click += new System.EventHandler(this.label10_Click);
             // 
             // label11
             // 
@@ -380,7 +350,6 @@ namespace APCmini
             this.Controls.Add(this.label12);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.label10);
-            this.Controls.Add(this.label9);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
@@ -389,8 +358,6 @@ namespace APCmini
             this.Controls.Add(this.connectAPCmini);
             this.Controls.Add(this.listBox5);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.listBox2);
             this.Controls.Add(this.listBox1);
@@ -425,15 +392,12 @@ namespace APCmini
         private System.Windows.Forms.ListBox listBox4;
         private System.Windows.Forms.ListBox listBox3;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ListBox listBox5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label12;

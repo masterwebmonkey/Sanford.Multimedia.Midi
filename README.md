@@ -17,9 +17,10 @@ the Idea is to predend the APC mini is a Launchpad for the grid and
 Launch Key for the row of nine sliders
 
 [![IMAGE ALT TEXT](http://img.youtube.com/vi/QSCpdkFN_jU/0.jpg)](https://www.youtube.com/watch?v=QSCpdkFN_jU "Demo Clip")
+
 --------------------------------------------------------------------------------------------------------
     UPDATE  for performace zones.
-    
+
 ![IMAGE ALT TEXT](http://masterwebmonkey.com/APCmini-update.jpg)
 
 
@@ -29,11 +30,14 @@ FIRST
  to get started please use loopMIDI to make three midi ports
  https://www.tobias-erichsen.de/software/loopmidi.html
 
-    APC control
-    Lights
-    Mixer
+    APCpad
+    APClights
+    APCmixer
 
 (it is not too hard you type a name in a box and click the plus sign)
+UPDATE  I changed the port names for FL 20. 
+It seems it automagicly connects channels for output devices now.
+
 
 ![IMAGE ALT TEXT](http://masterwebmonkey.com/loopmidi.jpg)
 
